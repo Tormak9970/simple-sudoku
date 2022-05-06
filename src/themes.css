@@ -1,0 +1,73 @@
+:root {
+    --font-color: rgb(231, 231, 231);
+    --background: #1a1a1a;
+    --foreground: #252525;
+    --hover: #303030;
+
+    --highlight: #82b74bff;
+    --highlight__hover: #8ac24e;
+    --highlight-accent: #405d27ff;
+    --highlight-accent__2: #32481eff;
+    --warning: #e24a4a;
+}
+
+[data-theme="light"] {
+    --font-color: rgb(20, 20, 20);
+    --background: #FCF8E8;
+    --foreground: #e9d7b6;
+    --hover: #e6c895;
+
+    --highlight: #e38a53;
+    --highlight__hover: #e17938;
+    --highlight-accent: #d8573a;
+}
+[data-theme="earth"] {
+    --font-color: rgb(20, 20, 20);
+    --background: #FAFDD6;
+    --foreground: #E4E9BE;
+    --hover: #cfd4a7;
+
+    --highlight: #A2B38B;
+    --highlight__hover: #8da36e;
+    --highlight-accent: #E6BA95;
+}
+[data-theme="sea"] {
+    --font-color: rgb(20, 20, 20);
+    --background: #EFFFFD;
+    --foreground: #B8FFF9;
+    --hover: #9de2ed;
+
+    --highlight: #85F4FF;
+    --highlight__hover: #6bdce6;
+    --highlight-accent: #42C2FF;
+}
+[data-theme="dark"] {
+    --font-color: rgb(231, 231, 231);
+    --background: #1a1a1a;
+    --foreground: #252525;
+    --hover: #303030;
+
+    --highlight: #82b74bff;
+    --highlight__hover: #8ac24e;
+    --highlight-accent: #405d27ff;
+}
+[data-theme="sunset"] {
+    --font-color: rgb(231, 231, 231);
+    --background: #511845;
+    --foreground: #900C3F;
+    --hover: #a9164e;
+
+    --highlight: #C70039;
+    --highlight__hover: #d41249;
+    --highlight-accent: #FF5733;
+}
+[data-theme="midnight"] {
+    --font-color: rgb(231, 231, 231);
+    --background: #160040;
+    --foreground: #4C0070;
+    --hover: #640790;
+
+    --highlight: #79018C;
+    --highlight__hover: #880b9b;
+    --highlight-accent: #9A0680;
+}

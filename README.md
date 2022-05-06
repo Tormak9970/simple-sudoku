@@ -1,2 +1,3 @@
-# simple-sudoku
-A simple sudoku game that has changeable themes and saves with persistent data
+# Simple Sudoku
+
+A simple minimalist sudoku game with customizable themes that saves state using persistent data.
