@@ -1,13 +1,15 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { solver } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver } from "../../stores";
     import { chunk } from "../../Utils";
 
     export let cellId: number;
     export let subId: number;
 
-    let hasNotes = false;
+    const firmId = `${cellId}${subId}`;
+
+    let displayNotes = false;
     let editable = true; // set true if board is '.' here
     let value = ""; // value of this square
 
@@ -43,12 +45,28 @@
     afterUpdate(() => {
         getValue();
     });
+
+    let notesList:number[] = [];
+
+    function click(e:Event) {
+        if ($selectedSubCellId == firmId) {
+            $selectedSubCellId = null;
+            $selectedNumber = null;
+        } else if (false /*(value == "") && (check if a number is active). if so write note or cell value*/) {
+
+        } else {
+            $selectedSubCellId = firmId;
+            $selectedNumber = value == "" ? null : value;
+        }
+    }
 </script>
 
-<div class="sub-cell">
-    {#if hasNotes}
+<div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable} on:click="{click}">
+    {#if displayNotes}
         <div class="notes-cont">
-
+            {#each notesList as note}
+                <div class="note">{note}</div>
+            {/each}
         </div>
     {:else}
         <div class="val-cont">
@@ -70,11 +88,16 @@
 
         font-size: 24px;
 
-        border-radius: 8px;
+        border-radius: 50px;
+
+        background-color: transparent;
+
+        transition: background-color 0.3s ease-in-out;
     }
 
-    .sub-cell:hover {
-        background-color: var(--hover);
-        cursor: pointer;
-    }
+    .sub-cell:hover { background-color: var(--hover); cursor: pointer; }
+    .clue { background-color: var(--foreground); }
+
+    .ghost-selected { background-color: var(--hover); }
+    .selected, .selected:hover { background-color: var(--highlight); }
 </style>

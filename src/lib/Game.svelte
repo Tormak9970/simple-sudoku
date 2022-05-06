@@ -4,9 +4,9 @@
   import { solver, theme, timer } from "../stores";
 
   import Board from "./board/Board.svelte";
-  import Controls from "./Controls.svelte";
+  import Controls from "./controls/Controls.svelte";
   import GameHeader from "./header/GameHeader.svelte";
-  import Numbers from "./Numbers.svelte";
+  import Numbers from "./numbers/Numbers.svelte";
 
   export let newGame: boolean = false;
   export let difficulty: string;

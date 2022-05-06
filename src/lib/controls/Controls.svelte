@@ -6,16 +6,16 @@
     })
 </script>
 
-<div id="numbers">
+<div id="controls">
     
 </div>
 
 <style>
-    @import '../themes.css';
+    @import '../../themes.css';
 
-    #numbers {
+    #controls {
         width: 60vh;
-        height: 15vh;
+        height: 5vh;
 
         display: flex;
         flex-direction: column;
