@@ -9,9 +9,9 @@
 
     const firmId = `${cellId}|${subId}`;
 
-    let displayNotes = false;
     let editable = true; // set true if board is '.' here
     let value = ""; // value of this square
+    let notesList:string[] = [];
 
     /**
      * TODO:
@@ -29,10 +29,17 @@
             editable = data.editable;
         }
     }
+    function getNotes() {
+        if ($solver.cBoard) {
+            const data = $solver.getNote(firmId);
+            if (data) notesList = data;
+        }
+    }
 
-    afterUpdate(() => { getValue(); });
-
-    let notesList:number[] = [];
+    afterUpdate(() => {
+        getValue();
+        if (value == "") getNotes();
+    });
 
     function click(e:Event) {
         if ($selectedSubCellId == firmId) {
@@ -64,7 +71,7 @@
 </script>
 
 <div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable} on:click="{click}">
-    {#if displayNotes}
+    {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}
                 <div class="note">{note}</div>

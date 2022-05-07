@@ -1,5 +1,5 @@
 import { get, set } from 'idb-keyval';
-import { chunk } from './Utils';
+import { arrayDiff, chunk, idToIdx } from './Utils';
 
 function cross(A:string[], B:string[]) {
     let C = [];
@@ -125,7 +125,7 @@ export function display(values: { [x: string]: any; }) { // Used for debugging
     return board;
 }
 
-type move = { cellId:string, value:string }
+type move = { cellId:string, newVal:string, oldVal:string, cNotes:{[cellId:string]: number[]} }
 
 export class Solver {
     iBoard:string; // initial Board
@@ -133,6 +133,7 @@ export class Solver {
     sBoard:string; // solved Board
     curDif:string;
     moves:move[];
+    notes:{ [cellId:string]: string[] }
 
     constructor() {}
 
@@ -381,6 +382,7 @@ export class Solver {
             this.cBoard = await get(`cBoard-${difficulty}`);
             this.sBoard = await get(`sBoard-${difficulty}`);
             this.moves = JSON.parse(await get(`moves-${difficulty}`));
+            this.notes = JSON.parse(await get(`notes-${difficulty}`));
 
             return this.iBoard;
         }
@@ -393,21 +395,61 @@ export class Solver {
         this.sBoard = Object.values(this.solve(this.iBoard)).join('');
         this.moves = [];
 
+        this.notes = {};
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                this.notes[`${i}|${j}`] = [];
+            }
+        }
+
         await this.save();
 
         return this.iBoard;
     }
 
-    async setCell(firmId:string, newVal:string): Promise<void> {
-        const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
+    #notesCheckRow() {
 
+    }
+
+    #notesCheckCol() {
+
+    }
+
+    #notesCheckSqr() {
+
+    }
+
+    #checkNotes(firmId:string, newVal:string):{[cellId:string]: number[]} {
+        const cNotes = {};
+        const oldNotes = this.getNote(firmId);
+        this.#setNote(firmId, "");
+
+
+        return cNotes
+    }
+
+    #setCell(firmId:string, newVal:string):string {
         let cBoardArr = this.cBoard.split("");
-        const rowIdx = Math.floor(cellId / 3) * 3 + Math.floor(subId / 3);
-        const colIdx = (cellId % 3) * 3 + (subId % 3);
-        const idx = rowIdx * 9 + colIdx;
+        const idxs = idToIdx(firmId);
+        const idx = idxs[0] * 9 + idxs[1];
 
-        cBoardArr.splice(idx, 1, newVal);
+        const oldVal = cBoardArr.splice(idx, 1, newVal);
         this.cBoard = cBoardArr.join("");
+
+        return oldVal[0];
+    }
+
+    async setCell(firmId:string, newVal:string): Promise<void> {
+        const oldVal = this.#setCell(firmId, newVal);
+
+        const cNotes = this.#checkNotes(firmId, newVal);
+
+        this.moves.push({
+            "cellId": firmId,
+            "newVal": newVal,
+            "oldVal": oldVal,
+            "cNotes": cNotes
+        });
 
         await this.save();
     }
@@ -435,6 +477,47 @@ export class Solver {
         }
     }
 
+    #setNote(firmId:string, note:string):string[] {
+        const oNotes = [...this.notes[firmId]];
+        if (note == "") {
+            this.notes[firmId] = [];
+        } else {
+            if (this.notes[firmId].includes(note)) {
+                this.notes[firmId].splice(this.notes[firmId].indexOf(note), 1);
+            } else {
+                this.notes[firmId].push(note);
+                this.notes[firmId].sort((a, b) => parseInt(a) - parseInt(b));
+            }
+        }
+        return oNotes;
+    }
+
+    async setNote(firmId:string, note:string): Promise<void> {
+        const oNotes = this.#setNote(firmId, note);
+
+        const cNotes = {}
+        cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+
+        const oldVal = this.#setCell(firmId, "");
+
+        this.moves.push({
+            "cellId": firmId,
+            "newVal": "",
+            "oldVal": oldVal,
+            "cNotes": cNotes
+        });
+
+        await this.save();
+    }
+
+    getNote(firmId:string): string[]|null {
+        if (this.getCell(firmId).editable) {
+            return this.notes[firmId];
+        } else {
+            return null;
+        }
+    }
+
     validate() {
         const res = this.solve(this.cBoard);
         if (res) {
@@ -453,5 +536,6 @@ export class Solver {
         await set(`cBoard-${this.curDif}`, this.cBoard);
         await set(`sBoard-${this.curDif}`, this.sBoard);
         await set(`moves-${this.curDif}`, JSON.stringify(this.moves));
+        await set(`notes-${this.curDif}`, JSON.stringify(this.notes));
     }
 }
