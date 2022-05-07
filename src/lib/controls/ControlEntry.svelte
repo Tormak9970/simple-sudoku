@@ -1,10 +1,14 @@
 <script lang="ts">
+import { inNoteMode } from "../../stores";
+
+
     export let handler:Function;
+    export let isNoteToggle=false;
 
     function click(e:Event) { handler(e); }
 </script>
 
-<div class="control" on:click="{click}">
+<div class="control" class:toggled={isNoteToggle && $inNoteMode} on:click="{click}">
     <slot />
 </div>
 
@@ -29,6 +33,8 @@
         transition: background-color 0.3s ease-in-out;
     }
 
-    .control:hover { background-color: var(--highlight); cursor: pointer; }
+    .control:hover { background-color: var(--foreground); cursor: pointer; }
+
+    .toggled { background-color: var(--highlight); }
 </style>
   

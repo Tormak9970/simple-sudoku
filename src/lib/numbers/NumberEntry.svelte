@@ -1,14 +1,35 @@
 <script lang="ts">
-    import { solver } from "../../stores";
+    import { ctrlNumSelected, initialSelect, inNoteMode, selectedNumber, selectedSubCellId, solver } from "../../stores";
 
     export let control:number;
 
     function click(e:Event) {
+        $ctrlNumSelected = $ctrlNumSelected == control ? null : control;
+
+        if (!$initialSelect) $initialSelect = "ctrl";
         
+        if ($selectedSubCellId) {
+            const cellVal = $solver.getCell($selectedSubCellId)
+            if (cellVal.editable) {
+                if ($inNoteMode) {
+                    
+                } else {
+                    if (cellVal.value != control.toString()) {
+                        $solver.setCell($selectedSubCellId, control.toString());
+                        $selectedNumber = control;
+                    } else if ($initialSelect == "cell") {
+                        $solver.setCell($selectedSubCellId, ".");
+                        $selectedNumber = null;
+                    }
+                }
+            }
+        }
+
+        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null;
     }
 </script>
 
-<div class="number" on:click="{click}">
+<div class="number" class:selected={$ctrlNumSelected == control && $initialSelect == "ctrl"} on:click="{click}">
     <div class="inner">{control}</div>
     <div class="num-left">{9 - ($solver.cBoard.split(`${control}`).length - 1)}</div>
 </div>
@@ -32,9 +53,11 @@
         margin: 0px 5px;
 
         position: relative;
+
+        transition: background-color 0.3s ease-in-out;
     }
 
-    .number:hover { cursor: pointer; }
+    .number:hover { cursor: pointer; background-color: var(--foreground); }
 
     .inner {
         font-size: 24px;
@@ -46,5 +69,7 @@
         font-size: 12px;
         bottom: 1px;
     }
+
+    .selected { background-color: var(--highlight); }
 </style>
   

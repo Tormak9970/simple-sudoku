@@ -3,7 +3,7 @@
 </script>
 
 <main>
-  <Game difficulty="medium" />
+  <Game difficulty="medium" newGame />
 </main>
 
 <style>

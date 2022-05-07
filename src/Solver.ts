@@ -125,11 +125,14 @@ export function display(values: { [x: string]: any; }) { // Used for debugging
     return board;
 }
 
+type move = { cellId:string, value:string }
+
 export class Solver {
     iBoard:string; // initial Board
     cBoard:string; // current Board
     sBoard:string; // solved Board
     curDif:string;
+    moves:move[];
 
     constructor() {}
 
@@ -150,9 +153,7 @@ export class Solver {
         return !squares.some((s) => !s.includes('.')) && !squares.some((s) => s.every((ss) => ss == '.'));
     }
 
-    #checkRows(board:string[][]): boolean {
-        return !board.some((s) => !s.includes('.'));
-    }
+    #checkRows(board:string[][]): boolean { return !board.some((s) => !s.includes('.')); }
 
     #checkCols(board:string[][]): boolean {
         const cols = [];
@@ -379,6 +380,7 @@ export class Solver {
             this.iBoard = await get(`iBoard-${difficulty}`);
             this.cBoard = await get(`cBoard-${difficulty}`);
             this.sBoard = await get(`sBoard-${difficulty}`);
+            this.moves = JSON.parse(await get(`moves-${difficulty}`));
 
             return this.iBoard;
         }
@@ -389,12 +391,48 @@ export class Solver {
         this.iBoard = this.#transform(this.#random_puzzle(numEntr));
         this.cBoard = this.iBoard;
         this.sBoard = Object.values(this.solve(this.iBoard)).join('');
+        this.moves = [];
 
-        await set(`iBoard-${difficulty}`, this.iBoard);
-        await set(`cBoard-${difficulty}`, this.cBoard);
-        await set(`sBoard-${difficulty}`, this.sBoard);
+        await this.save();
 
         return this.iBoard;
+    }
+
+    async setCell(firmId:string, newVal:string): Promise<void> {
+        const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
+
+        let cBoardArr = this.cBoard.split("");
+        const rowIdx = Math.floor(cellId / 3) * 3 + Math.floor(subId / 3);
+        const colIdx = (cellId % 3) * 3 + (subId % 3);
+        const idx = rowIdx * 9 + colIdx;
+
+        cBoardArr.splice(idx, 1, newVal);
+        this.cBoard = cBoardArr.join("");
+
+        await this.save();
+    }
+
+    getCell(firmId:string): {value:string, editable:boolean} {
+        const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
+
+        if (this.cBoard) {
+            const iBoardArr = chunk(this.iBoard.split(""), 9);
+            const cBoardArr = chunk(this.cBoard.split(""), 9);
+            const iVals = [];
+            const cVals = [];
+
+            for (let i = 0; i < 3; i++) {
+                const sIdx = (cellId % 3) * 3;
+                iVals.push(...(iBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
+                cVals.push(...(cBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
+            }
+
+            if (cVals[subId] != ".") {
+                return { "value": cVals[subId], "editable": iVals[subId] == "." }
+            } else {
+                return { "value": "", "editable": true } 
+            }
+        }
     }
 
     validate() {
@@ -414,5 +452,6 @@ export class Solver {
         await set(`iBoard-${this.curDif}`, this.iBoard);
         await set(`cBoard-${this.curDif}`, this.cBoard);
         await set(`sBoard-${this.curDif}`, this.sBoard);
+        await set(`moves-${this.curDif}`, JSON.stringify(this.moves));
     }
 }

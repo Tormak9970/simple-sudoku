@@ -1,13 +1,13 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { selectedSubCellId, selectedNumber, solver } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect } from "../../stores";
     import { chunk } from "../../Utils";
 
     export let cellId: number;
     export let subId: number;
 
-    const firmId = `${cellId}${subId}`;
+    const firmId = `${cellId}|${subId}`;
 
     let displayNotes = false;
     let editable = true; // set true if board is '.' here
@@ -24,27 +24,13 @@
 
     function getValue() {
         if ($solver.cBoard) {
-            const iBoardArr = chunk($solver.iBoard.split(""), 9);
-            const cBoardArr = chunk($solver.cBoard.split(""), 9);
-            const iVals = [];
-            const cVals = [];
-
-            for (let i = 0; i < 3; i++) {
-                const sIdx = (cellId % 3) * 3;
-                iVals.push(...(iBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
-                cVals.push(...(cBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
-            }
-
-            if (cVals[subId] != ".") {
-                value = cVals[subId];
-                editable = iVals[subId] == ".";
-            }
+            const data = $solver.getCell(firmId);
+            value = data.value;
+            editable = data.editable;
         }
     }
 
-    afterUpdate(() => {
-        getValue();
-    });
+    afterUpdate(() => { getValue(); });
 
     let notesList:number[] = [];
 
@@ -52,12 +38,28 @@
         if ($selectedSubCellId == firmId) {
             $selectedSubCellId = null;
             $selectedNumber = null;
-        } else if (false /*(value == "") && (check if a number is active). if so write note or cell value*/) {
-
         } else {
             $selectedSubCellId = firmId;
             $selectedNumber = value == "" ? null : value;
         }
+
+        if (!$initialSelect) $initialSelect = "cell";
+
+        if ($ctrlNumSelected && editable) {
+            if ($inNoteMode) {
+
+            } else {
+                if (value != $ctrlNumSelected) {
+                    $solver.setCell(firmId, $ctrlNumSelected.toString());
+                    $selectedNumber = $ctrlNumSelected.toString();
+                } else if ($initialSelect == "ctrl") {
+                    $solver.setCell(firmId, ".");
+                    $selectedNumber = null;
+                }
+            }
+        }
+
+        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null;
     }
 </script>
 

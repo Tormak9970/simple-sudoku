@@ -1,14 +1,9 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { selectedSubCellId, solver } from "../../stores";
+
     import NumberEntry from "./NumberEntry.svelte";
 
-    onMount(() => {
-        
-    })
-
-    function clearClick(e:Event) {
-
-    }
+    function clearClick(e:Event) { if ($selectedSubCellId && $solver.getCell($selectedSubCellId).editable) $solver.setCell($selectedSubCellId, "."); }
 </script>
 
 <div id="numbers">
@@ -65,7 +60,11 @@
         padding: 5px;
 
         margin: 0px 7px;
+
+        transition: background-color 0.3s ease-in-out;
     }
+
+    .clear:hover { cursor: pointer; background-color: var(--foreground); }
 
     .clear > svg { height: 24px; }
     .clear > svg > path { fill: var(--font-color); }
