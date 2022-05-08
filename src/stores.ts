@@ -12,6 +12,7 @@ export const selectedSubCellId = writable(null);
 
 
 export const inNoteMode = writable(false);
+export const shouldFetchNotes = writable(false);
 export const ctrlNumSelected = writable(null);
 
 export const isPaused = writable(false);

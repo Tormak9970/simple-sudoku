@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, shouldFetchNotes } from "../../stores";
 
     export let cellId: number;
     export let subId: number;
@@ -31,17 +31,16 @@
     function getNotes() {
         if ($solver.cBoard) {
             const data = $solver.getNote(firmId);
-            // console.log(data)
-            if (data) notesList = data;
+            notesList = data;
         }
     }
 
     afterUpdate(() => {
         getValue();
-        if (value == "") getNotes();
+        if (editable) getNotes();
     });
 
-    function click(e:Event) {
+    async function click(e:Event) {
         if (!$initialSelect) $initialSelect = "cell";
 
         if ($initialSelect == "cell") {
@@ -56,13 +55,19 @@
 
         if ($ctrlNumSelected && editable) {
             if ($inNoteMode) {
-
+                await $solver.setNote(firmId, $ctrlNumSelected);
+                if ($solver.getNote(firmId).includes($ctrlNumSelected)) {
+                    $selectedNumber = $ctrlNumSelected;
+                } else {
+                    $selectedNumber = "0";
+                    $selectedNumber = null;
+                }
             } else {
                 if (value != $ctrlNumSelected) {
-                    $solver.setCell(firmId, $ctrlNumSelected.toString());
+                    await $solver.setCell(firmId, $ctrlNumSelected.toString());
                     $selectedNumber = $ctrlNumSelected.toString();
                 } else if ($initialSelect == "ctrl") {
-                    $solver.setCell(firmId, ".");
+                    await $solver.setCell(firmId, ".");
                     $selectedNumber = null;
                 }
             }
@@ -72,7 +77,12 @@
     }
 </script>
 
-<div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($ctrlNumSelected == value) || (notesList.includes($ctrlNumSelected)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} on:click="{click}">
+<div class="sub-cell" class:clue={!editable} class:ghost-selected={
+    ((($selectedNumber == value) ||
+    (notesList.includes($selectedNumber))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
+    ($ctrlNumSelected == value) ||
+    (notesList.includes($ctrlNumSelected)) ||
+    ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}

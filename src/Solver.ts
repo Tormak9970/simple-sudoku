@@ -421,8 +421,7 @@ export class Solver {
 
     #checkNotes(firmId:string, newVal:string):{[cellId:string]: number[]} {
         const cNotes = {};
-        const oldNotes = this.getNote(firmId);
-        this.#setNote(firmId, "");
+        const oldNotes = this.#setNote(firmId, "");
 
 
         return cNotes
@@ -493,7 +492,6 @@ export class Solver {
     }
 
     async setNote(firmId:string, note:string): Promise<void> {
-        console.log(note);
         const oNotes = this.#setNote(firmId, note);
 
         const cNotes = {}

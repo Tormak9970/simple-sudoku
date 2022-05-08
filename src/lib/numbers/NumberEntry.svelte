@@ -5,7 +5,7 @@
 
     export let control:number;
 
-    function click(e:Event) {
+    async function click(e:Event) {
         if (!$initialSelect) $initialSelect = "ctrl";
 
         if ($initialSelect == "ctrl") {
@@ -16,14 +16,19 @@
             const cellVal = $solver.getCell($selectedSubCellId)
             if (cellVal.editable) {
                 if ($inNoteMode) {
-                    $solver.setNote($selectedSubCellId, control.toString());
-                    $selectedNumber = control;
+                    await $solver.setNote($selectedSubCellId, control.toString());
+                    if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
+                        $selectedNumber = control;
+                    } else {
+                        $selectedNumber = "0";
+                        $selectedNumber = null;
+                    }
                 } else {
                     if (cellVal.value != control.toString()) {
-                        $solver.setCell($selectedSubCellId, control.toString());
+                        await $solver.setCell($selectedSubCellId, control.toString());
                         $selectedNumber = control;
                     } else if ($initialSelect == "cell") {
-                        $solver.setCell($selectedSubCellId, ".");
+                        await $solver.setCell($selectedSubCellId, ".");
                         $selectedNumber = null;
                     }
                 }
