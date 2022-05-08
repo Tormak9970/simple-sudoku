@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { afterUpdate } from "svelte";
+
     import { ctrlNumSelected, initialSelect, inNoteMode, selectedNumber, selectedSubCellId, solver } from "../../stores";
 
     export let control:number;
@@ -12,7 +14,8 @@
             const cellVal = $solver.getCell($selectedSubCellId)
             if (cellVal.editable) {
                 if ($inNoteMode) {
-                    
+                    // $solver.setNote($selectedSubCellId, control.toString());
+                    // $selectedNumber = control;
                 } else {
                     if (cellVal.value != control.toString()) {
                         $solver.setCell($selectedSubCellId, control.toString());
@@ -27,11 +30,17 @@
 
         if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null;
     }
+
+    let numLeft = 9 - ($solver.cBoard.split(`${control}`).length - 1);
+
+    afterUpdate(() => {
+        numLeft = 9 - ($solver.cBoard.split(`${control}`).length - 1);
+    });
 </script>
 
 <div class="number" class:selected={$ctrlNumSelected == control && $initialSelect == "ctrl"} on:click="{click}">
     <div class="inner">{control}</div>
-    <div class="num-left">{9 - ($solver.cBoard.split(`${control}`).length - 1)}</div>
+    <div class="num-left">{numLeft}</div>
 </div>
 
 <style>
