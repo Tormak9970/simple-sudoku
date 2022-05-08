@@ -23,6 +23,6 @@ export function idToIdx(firmId:string):number[] {
     return [rowIdx, colIdx];
 }
 
-export function idxToId(rowIdx:number, colIdx:number):string {
-
-}
+// export function idxToId(rowIdx:number, colIdx:number):string {
+    
+// }

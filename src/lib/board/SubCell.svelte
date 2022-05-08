@@ -2,7 +2,6 @@
     import { afterUpdate } from "svelte";
 
     import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect } from "../../stores";
-    import { chunk } from "../../Utils";
 
     export let cellId: number;
     export let subId: number;
@@ -70,7 +69,7 @@
     }
 </script>
 
-<div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable} on:click="{click}">
+<div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($ctrlNumSelected == value) || (notesList.includes($ctrlNumSelected)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}
