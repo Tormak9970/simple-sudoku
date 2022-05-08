@@ -34,11 +34,11 @@
 [data-theme="sea"] {
     --font-color: rgb(20, 20, 20);
     --background: #EFFFFD;
-    --foreground: #B8FFF9;
-    --hover: #9de2ed;
+    --foreground: #9de2ed;
+    --hover: #74d4e3;
 
-    --highlight: #85F4FF;
-    --highlight__hover: #6bdce6;
+    --highlight: #4addea;
+    --highlight__hover: #46d5e2;
     --highlight-accent: #42C2FF;
 }
 [data-theme="dark"] {

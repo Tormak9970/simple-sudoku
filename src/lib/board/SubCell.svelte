@@ -41,15 +41,17 @@
     });
 
     function click(e:Event) {
-        if ($selectedSubCellId == firmId) {
-            $selectedSubCellId = null;
-            $selectedNumber = null;
-        } else {
-            $selectedSubCellId = firmId;
-            $selectedNumber = value == "" ? null : value;
-        }
-
         if (!$initialSelect) $initialSelect = "cell";
+
+        if ($initialSelect == "cell") {
+            if ($selectedSubCellId == firmId) {
+                $selectedSubCellId = null;
+                $selectedNumber = null;
+            } else {
+                $selectedSubCellId = firmId;
+                $selectedNumber = value == "" ? null : value;
+            }
+        }
 
         if ($ctrlNumSelected && editable) {
             if ($inNoteMode) {
@@ -69,7 +71,7 @@
     }
 </script>
 
-<div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($ctrlNumSelected == value) || (notesList.includes($ctrlNumSelected)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable} on:click="{click}">
+<div class="sub-cell" class:clue={!editable} class:ghost-selected={($selectedNumber == value) || (notesList.includes($selectedNumber)) || ($ctrlNumSelected == value) || (notesList.includes($ctrlNumSelected)) || ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}
@@ -106,6 +108,6 @@
     .sub-cell:hover { background-color: var(--hover); cursor: pointer; }
     .clue { background-color: var(--foreground); }
 
-    .ghost-selected { background-color: var(--hover); }
+    .ghost-selected { background-color: var(--highlight-accent); }
     .selected, .selected:hover { background-color: var(--highlight); }
 </style>

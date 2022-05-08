@@ -6,9 +6,11 @@
     export let control:number;
 
     function click(e:Event) {
-        $ctrlNumSelected = $ctrlNumSelected == control ? null : control;
-
         if (!$initialSelect) $initialSelect = "ctrl";
+
+        if ($initialSelect == "ctrl") {
+            $ctrlNumSelected = ($ctrlNumSelected == control) ? null : control;
+        }
         
         if ($selectedSubCellId) {
             const cellVal = $solver.getCell($selectedSubCellId)
