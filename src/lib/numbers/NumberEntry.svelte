@@ -16,8 +16,8 @@
             const cellVal = $solver.getCell($selectedSubCellId)
             if (cellVal.editable) {
                 if ($inNoteMode) {
-                    // $solver.setNote($selectedSubCellId, control.toString());
-                    // $selectedNumber = control;
+                    $solver.setNote($selectedSubCellId, control.toString());
+                    $selectedNumber = control;
                 } else {
                     if (cellVal.value != control.toString()) {
                         $solver.setCell($selectedSubCellId, control.toString());

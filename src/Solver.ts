@@ -493,16 +493,17 @@ export class Solver {
     }
 
     async setNote(firmId:string, note:string): Promise<void> {
+        console.log(note);
         const oNotes = this.#setNote(firmId, note);
 
         const cNotes = {}
         cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
 
-        const oldVal = this.#setCell(firmId, "");
+        const oldVal = this.#setCell(firmId, ".");
 
         this.moves.push({
             "cellId": firmId,
-            "newVal": "",
+            "newVal": ".",
             "oldVal": oldVal,
             "cNotes": cNotes
         });

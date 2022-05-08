@@ -31,6 +31,7 @@
     function getNotes() {
         if ($solver.cBoard) {
             const data = $solver.getNote(firmId);
+            // console.log(data)
             if (data) notesList = data;
         }
     }
@@ -75,7 +76,9 @@
     {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}
-                <div class="note">{note}</div>
+                <div class="note">
+                    <div>{note}</div>
+                </div>
             {/each}
         </div>
     {:else}
@@ -103,6 +106,25 @@
         background-color: transparent;
 
         transition: background-color 0.3s ease-in-out;
+    }
+
+    .notes-cont {
+        width: 80%;
+        height: 80%;
+
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+
+    .note {
+        font-size: 10px;
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .sub-cell:hover { background-color: var(--hover); cursor: pointer; }
