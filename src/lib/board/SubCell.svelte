@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, shouldFetchNotes } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect } from "../../stores";
 
     export let cellId: number;
     export let subId: number;
@@ -11,15 +11,6 @@
     let editable = true; // set true if board is '.' here
     let value = ""; // value of this square
     let notesList:string[] = [];
-
-    /**
-     * TODO:
-     * Selected cell should have ghost highlight if same number is selected
-     * Ghost selected class should be overwriten by selected class
-     *
-     * Cell should overwrite notes when number is chosen
-     *
-     */
 
     function getValue() {
         if ($solver.cBoard) {

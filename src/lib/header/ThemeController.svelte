@@ -26,10 +26,24 @@
         },
         "sea": {
             bg:"#EFFFFD",
-            fg:"#B8FFF9",
-            hvr:"#9de2ed",
-            hlgt:"#85F4FF",
-            hlgtH:"#6bdce6"
+            fg:"#c8f3fa",
+            hvr:"#add1d7",
+            hlgt:"#4addea",
+            hlgtH:"#46d5e2"
+        },
+        "grass": {
+            bg: "#F4EEA9",
+            fg: "#F0BB62",
+            hvr: "#d4a149",
+            hlgt: "#519259",
+            hlgtH: "#3c7c44"
+        },
+        "peace": {
+            bg: "#D5BFBF",
+            fg: "#d09393",
+            hvr: "#b66b6b",
+            hlgt: "#6D8299",
+            hlgtH: "#4f6d8e"
         },
         "dark": {
             bg:"#1a1a1a",
@@ -45,12 +59,26 @@
             hlgt:"#C70039",
             hlgtH:"#d41249"
         },
-        "midnight": {
-            bg:"#160040",
-            fg:"#4C0070",
-            hvr:"#4C0070",
-            hlgt:"#79018C",
-            hlgtH:"#880b9b"
+        "pop": {
+            bg:"#251D3A",
+            fg:"#2A2550",
+            hvr:"#382f7f",
+            hlgt:"#E04D01",
+            hlgtH:"#e03711"
+        },
+        "space": {
+            bg:"#180A0A",
+            fg:"#711A75",
+            hvr:"#9d19a4",
+            hlgt:"#F10086",
+            hlgtH:"#eb136a"
+        },
+        "magma": {
+            bg:"#000000",
+            fg:"#3D0000",
+            hvr:"#5d0404",
+            hlgt:"#950101",
+            hlgtH:"#b30808"
         },
         "placeholder": {
             bg:"transparent",
@@ -108,9 +136,9 @@
 
         border-radius: 50px;
 
-        max-width: 200px;
+        max-width: 400px;
 
-        transition: max-width 0.7s ease-in-out, background-color 0.4s ease-in-out;
+        transition: max-width 1s ease-in-out, background-color 0.4s ease-in-out;
 
         overflow: hidden;
     }

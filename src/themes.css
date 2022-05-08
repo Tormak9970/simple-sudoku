@@ -11,6 +11,7 @@
     --warning: #e24a4a;
 }
 
+/* Light Themes */
 [data-theme="light"] {
     --font-color: rgb(20, 20, 20);
     --background: #FCF8E8;
@@ -29,18 +30,40 @@
 
     --highlight: #A2B38B;
     --highlight__hover: #8da36e;
-    --highlight-accent: #E6BA95;
+    --highlight-accent: #eab1d8;
 }
 [data-theme="sea"] {
     --font-color: rgb(20, 20, 20);
     --background: #EFFFFD;
-    --foreground: #9de2ed;
-    --hover: #74d4e3;
+    --foreground: #c8f3fa;
+    --hover: #add1d7;
 
     --highlight: #4addea;
     --highlight__hover: #46d5e2;
     --highlight-accent: #42C2FF;
 }
+[data-theme="grass"] {
+    --font-color: rgb(20, 20, 20);
+    --background: #F4EEA9;
+    --foreground: #F0BB62;
+    --hover: #d4a149;
+
+    --highlight: #519259;
+    --highlight__hover: #3c7c44;
+    --highlight-accent: #0cbd0c;
+}
+[data-theme="peace"] {
+    --font-color: rgb(20, 20, 20);
+    --background: #D5BFBF;
+    --foreground: #d09393;
+    --hover: #b66b6b;
+
+    --highlight: #6D8299;
+    --highlight__hover: #4f6d8e;
+    --highlight-accent: #316B83;
+}
+
+/* Dark Themes */
 [data-theme="dark"] {
     --font-color: rgb(231, 231, 231);
     --background: #1a1a1a;
@@ -61,13 +84,33 @@
     --highlight__hover: #d41249;
     --highlight-accent: #FF5733;
 }
-[data-theme="midnight"] {
+[data-theme="pop"] {
     --font-color: rgb(231, 231, 231);
-    --background: #160040;
-    --foreground: #33004a;
-    --hover: #640790;
+    --background: #251D3A;
+    --foreground: #2A2550;
+    --hover: #382f7f;
 
-    --highlight: #79018C;
-    --highlight__hover: #880b9b;
-    --highlight-accent: #9A0680;
+    --highlight: #E04D01;
+    --highlight__hover: #e03711;
+    --highlight-accent: #FF7700;
+}
+[data-theme="space"] {
+    --font-color: rgb(231, 231, 231);
+    --background: #180A0A;
+    --foreground: #711A75;
+    --hover: #9d19a4;
+
+    --highlight: #F10086;
+    --highlight__hover: #eb136a;
+    --highlight-accent: #cd5178;
+}
+[data-theme="magma"] {
+    --font-color: rgb(231, 231, 231);
+    --background: #000000;
+    --foreground: #3D0000;
+    --hover: #5d0404;
+
+    --highlight: #950101;
+    --highlight__hover: #b30808;
+    --highlight-accent: #FF0000;
 }
