@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, rerender } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, rerender, errorsList } from "../../stores";
 
     export let cellId: number;
     export let subId: number;
@@ -45,6 +45,8 @@
         }
 
         if ($ctrlNumSelected && editable) {
+            if ($errorsList.includes(firmId)) $errorsList.splice($errorsList.indexOf(firmId), 1); $errorsList = [...$errorsList];
+
             if ($inNoteMode) {
                 await $solver.setNote(firmId, $ctrlNumSelected.toString());
                 if ($solver.getNote(firmId).includes($ctrlNumSelected)) {
@@ -56,7 +58,7 @@
             } else {
                 if (value != $ctrlNumSelected) {
                     await $solver.setCell(firmId, $ctrlNumSelected.toString());
-                    $selectedNumber = $ctrlNumSelected.toString();
+                    $selectedNumber = $ctrlNumSelected;
                     $rerender();
                 } else if ($initialSelect == "ctrl") {
                     await $solver.setCell(firmId, ".");
@@ -66,7 +68,7 @@
             }
         }
 
-        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null;
+        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null; $selectedNumber = null;
     }
 </script>
 
@@ -75,7 +77,7 @@
     (notesList.includes($selectedNumber?.toString()))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
     ($ctrlNumSelected == value) ||
     (notesList.includes($ctrlNumSelected?.toString())) ||
-    ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} on:click="{click}">
+    ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} class:error={$errorsList.includes(firmId)} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}
@@ -135,4 +137,8 @@
 
     .ghost-selected { background-color: var(--highlight-accent); }
     .selected, .selected:hover { background-color: var(--highlight); }
+
+    .error { background-color: var(--warning); }
+    .error:hover { background-color: var(--warning-hover); }
+    .error.selected { background-color: var(--warning-hover); }
 </style>

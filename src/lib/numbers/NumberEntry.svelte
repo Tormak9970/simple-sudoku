@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { ctrlNumSelected, initialSelect, inNoteMode, rerender, selectedNumber, selectedSubCellId, solver } from "../../stores";
+    import { ctrlNumSelected, errorsList, initialSelect, inNoteMode, rerender, selectedNumber, selectedSubCellId, solver } from "../../stores";
 
     export let control:number;
 
@@ -13,7 +13,9 @@
         }
         
         if ($selectedSubCellId) {
-            const cellVal = $solver.getCell($selectedSubCellId)
+            if ($errorsList.includes($selectedSubCellId)) $errorsList.splice($errorsList.indexOf($selectedSubCellId), 1); $errorsList = [...$errorsList];
+
+            const cellVal = $solver.getCell($selectedSubCellId);
             if (cellVal.editable) {
                 if ($inNoteMode) {
                     await $solver.setNote($selectedSubCellId, control.toString());
@@ -35,7 +37,7 @@
             }
         }
 
-        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null;
+        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null; $selectedNumber = null;
     }
 
     let numLeft = 9 - ($solver.cBoard.split(`${control}`).length - 1);

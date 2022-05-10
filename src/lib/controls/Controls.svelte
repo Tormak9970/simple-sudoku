@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ctrlNumSelected, initialSelect, inNoteMode, isPaused, rerender, restartCallback, selectedNumber, selectedSubCellId, showRestart, solver, timer } from "../../stores";
+    import { ctrlNumSelected, errorsList, initialSelect, inNoteMode, isPaused, rerender, restartCallback, selectedNumber, selectedSubCellId, showRestart, solver, timer } from "../../stores";
     import ControlEntry from "./ControlEntry.svelte";
     
     import RestartModal from '../modals/RestartModal.svelte';
@@ -21,6 +21,7 @@
         $inNoteMode = false;
         $initialSelect = null;
         $ctrlNumSelected = null;
+        $errorsList = [];
         $rerender();
     }
 
@@ -30,7 +31,7 @@
         const errs = $solver.validate();
 
         if (errs.length > 0) {
-            console.log(errs);
+            $errorsList = errs;
         }
     }
 

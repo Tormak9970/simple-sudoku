@@ -23,3 +23,5 @@ export const showRestart = writable(false);
 export const restartCallback = writable(() => {});
 
 export const isPaused = writable(false);
+
+export const errorsList = writable([]);
