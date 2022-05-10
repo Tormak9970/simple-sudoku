@@ -23,6 +23,19 @@ export function idToIdx(firmId:string):number[] {
     return [rowIdx, colIdx];
 }
 
-// export function idxToId(rowIdx:number, colIdx:number):string {
-    
-// }
+export function idxToId(rowIdx:number, colIdx:number):string {
+    const cellId = Math.floor(rowIdx / 3) * 3 + Math.floor(colIdx / 3);
+    const subId = (rowIdx % 3) * 3 + (colIdx % 3);
+
+    return `${cellId}|${subId}`
+}
+
+export function getEveryNth(arr:any[], n:number, offset?:number) {
+    const result = [];
+  
+    for (let i = offset; i < arr.length; i += n) {
+        result.push(arr[i]);
+    }
+  
+    return result;
+}

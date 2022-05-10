@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, rerender } from "../../stores";
 
     export let cellId: number;
     export let subId: number;
@@ -50,8 +50,7 @@
                 if ($solver.getNote(firmId).includes($ctrlNumSelected)) {
                     $selectedNumber = $ctrlNumSelected;
                 } else {
-                    $selectedNumber = "0";
-                    $selectedNumber = null;
+                    $rerender();
                 }
             } else {
                 if (value != $ctrlNumSelected) {
@@ -70,9 +69,9 @@
 
 <div class="sub-cell" class:clue={!editable} class:ghost-selected={
     ((($selectedNumber == value) ||
-    (notesList.includes($selectedNumber.toString()))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
+    (notesList.includes($selectedNumber?.toString()))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
     ($ctrlNumSelected == value) ||
-    (notesList.includes($ctrlNumSelected.toString())) ||
+    (notesList.includes($ctrlNumSelected?.toString())) ||
     ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">

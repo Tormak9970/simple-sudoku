@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
 
-    import { ctrlNumSelected, initialSelect, inNoteMode, selectedNumber, selectedSubCellId, solver } from "../../stores";
+    import { ctrlNumSelected, initialSelect, inNoteMode, rerender, selectedNumber, selectedSubCellId, solver } from "../../stores";
 
     export let control:number;
 
@@ -20,8 +20,7 @@
                     if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
                         $selectedNumber = control;
                     } else {
-                        $selectedNumber = "0";
-                        $selectedNumber = null;
+                        $rerender();
                     }
                 } else {
                     if (cellVal.value != control.toString()) {

@@ -1,5 +1,5 @@
 import { get, set } from 'idb-keyval';
-import { arrayDiff, chunk, idToIdx } from './Utils';
+import { arrayDiff, chunk, getEveryNth, idToIdx, idxToId } from './Utils';
 
 function cross(A:string[], B:string[]) {
     let C = [];
@@ -125,7 +125,7 @@ export function display(values: { [x: string]: any; }) { // Used for debugging
     return board;
 }
 
-type move = { cellId:string, newVal:string, oldVal:string, cNotes:{[cellId:string]: number[]} }
+type move = { firmId:string, newVal:string, oldVal:string, cNotes:{[firmId:string]: number[]} }
 
 export class Solver {
     iBoard:string; // initial Board
@@ -133,7 +133,7 @@ export class Solver {
     sBoard:string; // solved Board
     curDif:string;
     moves:move[];
-    notes:{ [cellId:string]: string[] }
+    notes:{ [firmId:string]: string[] }
 
     constructor() {}
 
@@ -407,22 +407,67 @@ export class Solver {
         return this.iBoard;
     }
 
-    #notesCheckRow() {
+    #notesCheckRow([rowIdx, colIdx]:number[], newVal:string) {
+        const cNotes = {};
 
+        for (let i = 0; i < 9; i++) {
+            if (i != colIdx) {
+                const firmId = idxToId(rowIdx, i);
+
+                if (this.notes[firmId].includes(newVal)) {
+                    const oNotes = this.#setNote(firmId, newVal);
+                    cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+                }
+            }
+        }
+
+        return cNotes;
     }
 
-    #notesCheckCol() {
+    #notesCheckCol([rowIdx, colIdx]:number[], newVal:string) {
+        const cNotes = {};
 
+        for (let i = 0; i < 9; i++) {
+            if (i != rowIdx) {
+                const firmId = idxToId(i, colIdx);
+
+                if (this.notes[firmId].includes(newVal)) {
+                    const oNotes = this.#setNote(firmId, newVal);
+                    cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+                }
+            }
+        }
+
+        return cNotes;
     }
 
-    #notesCheckSqr() {
+    #notesCheckSqr(firmId:string, newVal:string) {
+        const cNotes = {};
+        const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
 
+        for (let i = 0; i < 9; i++) {
+            const subFirmId = `${cellId}|${i}`;
+            if (subFirmId != firmId) {
+                if (this.notes[subFirmId].includes(newVal)) {
+                    const oNotes = this.#setNote(subFirmId, newVal);
+                    cNotes[subFirmId] = arrayDiff(oNotes, this.notes[subFirmId]);
+                }
+            }
+        }
+
+        return cNotes;
     }
 
     #checkNotes(firmId:string, newVal:string):{[cellId:string]: number[]} {
         const cNotes = {};
-        const oldNotes = this.#setNote(firmId, "");
+        const idxs = idToIdx(firmId);
+        const oNotes = this.#setNote(firmId, "");
 
+        cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+
+        Object.assign(cNotes, this.#notesCheckRow(idxs, newVal));
+        Object.assign(cNotes, this.#notesCheckCol(idxs, newVal));
+        Object.assign(cNotes, this.#notesCheckSqr(firmId, newVal));
 
         return cNotes
     }
@@ -444,7 +489,7 @@ export class Solver {
         const cNotes = this.#checkNotes(firmId, newVal);
 
         this.moves.push({
-            "cellId": firmId,
+            "firmId": firmId,
             "newVal": newVal,
             "oldVal": oldVal,
             "cNotes": cNotes
@@ -454,26 +499,32 @@ export class Solver {
     }
 
     getCell(firmId:string): {value:string, editable:boolean} {
-        const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
-
         if (this.cBoard) {
-            const iBoardArr = chunk(this.iBoard.split(""), 9);
-            const cBoardArr = chunk(this.cBoard.split(""), 9);
-            const iVals = [];
-            const cVals = [];
+            const iBoardArr = this.iBoard.split("");
+            const cBoardArr = this.cBoard.split("");
+            const idxs = idToIdx(firmId);
+            const idx = idxs[0] * 9 + idxs[1];
 
-            for (let i = 0; i < 3; i++) {
-                const sIdx = (cellId % 3) * 3;
-                iVals.push(...(iBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
-                cVals.push(...(cBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
-            }
-
-            if (cVals[subId] != ".") {
-                return { "value": cVals[subId], "editable": iVals[subId] == "." }
+            if (cBoardArr[idx] != ".") {
+                return { "value":cBoardArr[idx], "editable": iBoardArr[idx] == "." }
             } else {
                 return { "value": "", "editable": true } 
             }
         }
+    }
+
+    getSquare(firmId:string) {
+        const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
+
+        const cBoardArr = chunk(this.cBoard.split(""), 9);
+        const cVals = [];
+
+        for (let i = 0; i < 3; i++) {
+            const sIdx = (cellId % 3) * 3;
+            cVals.push(...(cBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
+        }
+
+        return cVals;
     }
 
     #setNote(firmId:string, note:string):string[] {
@@ -500,7 +551,7 @@ export class Solver {
         const oldVal = this.#setCell(firmId, ".");
 
         this.moves.push({
-            "cellId": firmId,
+            "firmId": firmId,
             "newVal": ".",
             "oldVal": oldVal,
             "cNotes": cNotes
@@ -518,11 +569,31 @@ export class Solver {
     }
 
     validate() {
-        const res = this.solve(this.cBoard);
+        const res = this.solve(this.cBoard); // redundant. Can just check this.sBoard
         if (res) {
             return [];
         } else {
             // return list of incorrect values
+        }
+    }
+
+    async undo() {
+        if (this.moves.length > 0) {
+            const lMove = this.moves.pop();
+            console.log(lMove);
+
+            // revert square
+            this.#setCell(lMove.firmId, lMove.oldVal);
+
+            // revert any changed notes
+            const cNotes = Object.entries(lMove.cNotes);
+            for (const cNote of cNotes) {
+                for(const note of cNote[1]) {
+                    this.#setNote(cNote[0], note.toString());
+                }
+            }
+
+            await this.save();
         }
     }
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { inNoteMode } from "../../stores";
+    import { inNoteMode, rerender, selectedNumber, solver } from "../../stores";
 
     import ControlEntry from "./ControlEntry.svelte";
 
@@ -7,18 +7,13 @@
         // add confirmation modal
     }
 
-    function noteMode(e:Event) {
-        // while toggled keep background of note mode btn highlighted
-        $inNoteMode = !$inNoteMode;
-    }
+    function noteMode(e:Event) { $inNoteMode = !$inNoteMode; }
 
     function validate(e:Event) {
 
     }
 
-    function undo(e:Event) {
-
-    }
+    async function undo(e:Event) { await $solver.undo(); $rerender(); }
 </script>
 
 <div id="controls">
