@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { Solver } from "./Solver";
 
 export const theme = writable('dark');
@@ -14,8 +14,9 @@ export const inNoteMode = writable(false);
 export const ctrlNumSelected = writable(null);
 
 export const rerender = writable(() => {
+    const oVal = get(selectedNumber);
     selectedNumber.set("0");
-    selectedNumber.set(null);
+    selectedNumber.set(oVal);
 })
 
 export const isPaused = writable(false);

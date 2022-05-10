@@ -20,6 +20,7 @@
                     if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
                         $selectedNumber = control;
                     } else {
+                        $selectedNumber = null;
                         $rerender();
                     }
                 } else {
@@ -46,7 +47,7 @@
 
 <div class="number" class:selected={$ctrlNumSelected == control && $initialSelect == "ctrl"} on:click="{click}">
     <div class="inner">{control}</div>
-    <div class="num-left">{numLeft}</div>
+    <div class="num-left">{numLeft > 0 ? numLeft : ""}</div>
 </div>
 
 <style>

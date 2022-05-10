@@ -50,15 +50,18 @@
                 if ($solver.getNote(firmId).includes($ctrlNumSelected)) {
                     $selectedNumber = $ctrlNumSelected;
                 } else {
+                    $selectedNumber = null;
                     $rerender();
                 }
             } else {
                 if (value != $ctrlNumSelected) {
                     await $solver.setCell(firmId, $ctrlNumSelected.toString());
                     $selectedNumber = $ctrlNumSelected.toString();
+                    $rerender();
                 } else if ($initialSelect == "ctrl") {
                     await $solver.setCell(firmId, ".");
                     $selectedNumber = null;
+                    $rerender();
                 }
             }
         }

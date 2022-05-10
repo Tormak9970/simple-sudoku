@@ -569,18 +569,27 @@ export class Solver {
     }
 
     validate() {
-        const res = this.solve(this.cBoard); // redundant. Can just check this.sBoard
-        if (res) {
-            return [];
-        } else {
-            // return list of incorrect values
+        const cBoardArr = this.cBoard.split("");
+        const errs = Array.from(this.sBoard.split("").entries()).filter((v:[number, string]) => cBoardArr[v[0]] != v[1] && cBoardArr[v[0]] != ".").map((v) => idxToId(Math.floor(v[0] / 9), v[0] % 9));
+        return errs;
+    }
+
+    async restart() {
+        this.cBoard = this.iBoard;
+        this.notes = {};
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                this.notes[`${i}|${j}`] = [];
+            }
         }
+        this.moves = [];
+
+        await this.save();
     }
 
     async undo() {
         if (this.moves.length > 0) {
             const lMove = this.moves.pop();
-            console.log(lMove);
 
             // revert square
             this.#setCell(lMove.firmId, lMove.oldVal);

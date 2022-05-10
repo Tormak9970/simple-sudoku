@@ -3,14 +3,20 @@
 
     import ControlEntry from "./ControlEntry.svelte";
 
-    function restart(e:Event) {
+    async function restart(e:Event) {
         // add confirmation modal
+        await $solver.restart();
+        $rerender();
     }
 
     function noteMode(e:Event) { $inNoteMode = !$inNoteMode; }
 
     function validate(e:Event) {
+        const errs = $solver.validate();
 
+        if (errs.length > 0) {
+            console.log(errs);
+        }
     }
 
     async function undo(e:Event) { await $solver.undo(); $rerender(); }
