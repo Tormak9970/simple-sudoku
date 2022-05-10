@@ -17,6 +17,9 @@ export const rerender = writable(() => {
     const oVal = get(selectedNumber);
     selectedNumber.set("0");
     selectedNumber.set(oVal);
-})
+});
+
+export const showRestart = writable(false);
+export const restartCallback = writable(() => {});
 
 export const isPaused = writable(false);
