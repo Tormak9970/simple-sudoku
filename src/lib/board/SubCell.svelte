@@ -46,7 +46,7 @@
 
         if ($ctrlNumSelected && editable) {
             if ($inNoteMode) {
-                await $solver.setNote(firmId, $ctrlNumSelected);
+                await $solver.setNote(firmId, $ctrlNumSelected.toString());
                 if ($solver.getNote(firmId).includes($ctrlNumSelected)) {
                     $selectedNumber = $ctrlNumSelected;
                 } else {
@@ -70,9 +70,9 @@
 
 <div class="sub-cell" class:clue={!editable} class:ghost-selected={
     ((($selectedNumber == value) ||
-    (notesList.includes($selectedNumber))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
+    (notesList.includes($selectedNumber.toString()))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
     ($ctrlNumSelected == value) ||
-    (notesList.includes($ctrlNumSelected)) ||
+    (notesList.includes($ctrlNumSelected.toString())) ||
     ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">
