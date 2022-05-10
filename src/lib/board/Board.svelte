@@ -32,8 +32,8 @@
     @import '../../themes.css';
 
     #board {
-        width: 60vh;
-        height: 60vh;
+        width: min(60vh, 90vw);
+        height: min(60vh, 90vw);
 
         display: flex;
         flex-direction: column;

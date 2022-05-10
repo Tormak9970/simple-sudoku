@@ -33,7 +33,7 @@
 
     #numbers {
         margin: 2vh 0vh;
-        width: 60vh;
+        width: min(60vh, 90vw);
 
         display: flex;
         flex-direction: column;

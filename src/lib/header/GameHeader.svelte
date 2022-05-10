@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { get, set, update } from "idb-keyval";
-    import { isPaused, timer } from "../../stores";
+    import { update } from "idb-keyval";
+    import { isPaused, renderIdx, timer } from "../../stores";
     import { onDestroy, onMount } from "svelte";
     import ThemeController from "./ThemeController.svelte";
 
@@ -10,7 +10,7 @@
 
     onMount(() => {
         intervalId = setInterval(() => {
-            if (!$isPaused) {
+            if (!$isPaused && $renderIdx == 1) {
                 let [hours, minutes, seconds] = $timer.split(":").map(v => parseInt(v));
 
                 if (seconds == 59) {
@@ -38,9 +38,7 @@
         clearInterval(intervalId);
     });
 
-    function back(e:Event) {
-
-    }
+    function back(e:Event) { $renderIdx = 0; }
 </script>
 
 <div id="gameHeader">
@@ -60,7 +58,7 @@
     </div>
 
     <div class="themes-cont">
-        <ThemeController />
+        
     </div>
 </div>
 
@@ -68,7 +66,7 @@
     @import '../../themes.css';
 
     #gameHeader {
-        width: 60vh;
+        width: min(60vh, 90vw);
         height: 5vh;
 
         display: flex;

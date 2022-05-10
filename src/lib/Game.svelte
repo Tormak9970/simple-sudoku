@@ -1,7 +1,7 @@
 <script lang="ts">
   import { get, set } from "idb-keyval";
 
-  import { solver, theme, timer } from "../stores";
+  import { solver, timer } from "../stores";
 
   import Board from "./board/Board.svelte";
   import Controls from "./controls/Controls.svelte";
@@ -12,14 +12,6 @@
   export let difficulty: string;
 
   async function load() {
-    // get saved theme or save default
-    if (await get("theme")) {
-      $theme = await get("theme");
-    } else {
-      await set("theme", $theme);
-    }
-    document.documentElement.setAttribute('data-theme', $theme);
-
     // get saved board or create new
     await $solver.getBoard(difficulty, newGame);
 
@@ -32,21 +24,20 @@
   }
 </script>
 
-<main>
+<div id="game">
   {#await load() then _}
     <GameHeader difficulty="medium" />
     <Board />
     <Numbers />
     <Controls />
   {/await}
-</main>
+</div>
 
 <style>
   @import "../themes.css";
 
-  main {
+  #game {
     width: 100%;
-    height: 100%;
 
     display: flex;
     flex-direction: column;

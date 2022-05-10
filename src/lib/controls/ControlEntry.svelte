@@ -1,6 +1,5 @@
 <script lang="ts">
-import { inNoteMode } from "../../stores";
-
+    import { inNoteMode } from "../../stores";
 
     export let handler:Function;
     export let isNoteToggle=false;
