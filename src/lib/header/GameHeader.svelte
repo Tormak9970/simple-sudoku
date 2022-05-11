@@ -1,8 +1,7 @@
 <script lang="ts">
     import { update } from "idb-keyval";
-    import { isPaused, renderIdx, timer } from "../../stores";
+    import { isPaused, renderIdx, solver, timer } from "../../stores";
     import { onDestroy, onMount } from "svelte";
-    import ThemeController from "./ThemeController.svelte";
 
     export let difficulty:string;
 
@@ -38,7 +37,7 @@
         clearInterval(intervalId);
     });
 
-    function back(e:Event) { $renderIdx = 0; }
+    async function back(e:Event) { await $solver.save(); $renderIdx = 0; }
 </script>
 
 <div id="gameHeader">

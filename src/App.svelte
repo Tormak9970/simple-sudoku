@@ -1,13 +1,20 @@
 <script>
   import Game from "./lib/Game.svelte";
   import ThemeController from "./lib/header/ThemeController.svelte";
+  import StartScreen from "./lib/StartScreen.svelte";
+  import { newGame, renderIdx, selectedDiff } from "./stores";
+
 </script>
 
 <main>
   <div class="theme-cont">
     <ThemeController />
   </div>
-  <Game difficulty="medium" newGame />
+  {#if $renderIdx == 0}
+    <StartScreen />
+  {:else}
+    <Game difficulty={$selectedDiff} newGame={$newGame} />
+  {/if}
 </main>
 
 <style>

@@ -3,7 +3,8 @@ import { Solver } from "./Solver";
 
 // Menu stores
 export const renderIdx = writable(0);
-export const theme = writable('dark');
+export const newGame = writable(false);
+export const selectedDiff = writable("medium");
 
 // Game stores
 export const timer = writable("00:00:00");
@@ -23,6 +24,8 @@ export const restartCallback = writable(() => {});
 export const errorsList = writable([]);
 
 // Universal stores
+export const theme = writable('dark');
+
 export const rerender = writable(() => {
     const oVal = get(selectedNumber);
     selectedNumber.set("0");
