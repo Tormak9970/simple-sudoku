@@ -22,7 +22,7 @@
 
   main {
     width: 100%;
-    height: calc(100% - 5vh);
+    height: 100%;
 
     display: flex;
     flex-direction: column;
@@ -33,7 +33,7 @@
   }
 
   .theme-cont {
-    width: 90%;
+    width: min(60vh, 90vw);
     height: 5vh;
 
     display: flex;

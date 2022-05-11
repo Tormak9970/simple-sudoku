@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "idb-keyval": "^6.1.0",
-    "node-sass": "^7.0.1"
+    "node-sass": "^7.0.1",
+    "svelte-carousel": "^1.0.19"
   }
 }
