@@ -3,12 +3,8 @@
     import { selectedDiff } from '../../stores';
     import { set } from 'idb-keyval';
 
-    const difficulties = [
-        "Easy",
-        "Medium",
-        "Hard",
-        "Expert"
-    ];
+    export let difficulties:string[];
+    
     let renderedDiff = 0;
     let carousel;
 
@@ -63,7 +59,7 @@
     @import "../../themes.css";
 
     #diffSelector {
-        width: min(40vh, 60vw);
+        width: min(30vh, 50vw);
 
         display: flex;
         flex-direction: row;
