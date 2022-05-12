@@ -1,5 +1,5 @@
 import { get, set } from 'idb-keyval';
-import { arrayDiff, chunk, getEveryNth, idToIdx, idxToId } from './Utils';
+import { arrayDiff, chunk, idToIdx, idxToId } from './Utils';
 
 function cross(A:string[], B:string[]) {
     let C = [];

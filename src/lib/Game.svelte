@@ -26,7 +26,7 @@
 
 <div id="game">
   {#await load() then _}
-    <GameHeader difficulty="medium" />
+    <GameHeader difficulty={difficulty} />
     <Board />
     <Numbers />
     <Controls />

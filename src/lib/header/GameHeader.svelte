@@ -1,6 +1,6 @@
 <script lang="ts">
     import { update } from "idb-keyval";
-    import { isPaused, renderIdx, solver, timer } from "../../stores";
+    import { ctrlNumSelected, errorsList, initialSelect, inNoteMode, isPaused, renderIdx, selectedNumber, selectedSubCellId, showRestart, solver, timer } from "../../stores";
     import { onDestroy, onMount } from "svelte";
 
     export let difficulty:string;
@@ -8,7 +8,7 @@
     let intervalId: NodeJS.Timer;
 
     onMount(() => {
-        intervalId = setInterval(() => {
+        intervalId = setInterval(async () => {
             if (!$isPaused && $renderIdx == 1) {
                 let [hours, minutes, seconds] = $timer.split(":").map(v => parseInt(v));
 
@@ -28,7 +28,7 @@
                 }
 
                 $timer = `${(hours < 10) ? '0'+hours : hours}:${(minutes < 10) ? '0'+minutes : minutes}:${(seconds < 10) ? '0'+seconds : seconds}`;
-                update(`timer-${difficulty}`, (oldTime) => oldTime = $timer);
+                await update(`timer-${difficulty}`, (oldTime) => oldTime = $timer);
             }
         }, 1000);
     });
@@ -37,7 +37,19 @@
         clearInterval(intervalId);
     });
 
-    async function back(e:Event) { await $solver.save(); $renderIdx = 0; }
+    async function back(e:Event) {
+        await $solver.save();
+        $timer = "00:00:00";
+        $isPaused = false;
+        $showRestart = false;
+        $selectedNumber = null;
+        $selectedSubCellId = null;
+        $inNoteMode = false;
+        $initialSelect = null;
+        $ctrlNumSelected = null;
+        $errorsList = [];
+        $renderIdx = 0;
+    }
 </script>
 
 <div id="gameHeader">
