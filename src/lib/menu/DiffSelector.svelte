@@ -2,30 +2,23 @@
     import Carousel from 'svelte-carousel';
     import { selectedDiff } from '../../stores';
     import { set } from 'idb-keyval';
+    import { capitalizeFirstLetter } from '../../Utils';
 
     export let difficulties:string[];
     
-    let renderedDiff = 0;
+    let renderedDiff = difficulties.indexOf(capitalizeFirstLetter($selectedDiff));
     let carousel;
 
     async function leftArrowClick(e:Event) {
-        if (renderedDiff == 0) {
-            renderedDiff = 3;
-        } else {
-            renderedDiff--;
-        }
+        renderedDiff = renderedDiff == 0 ? 3 : renderedDiff - 1;
         $selectedDiff = difficulties[renderedDiff].toLowerCase();
-        await set('difficulty', $selectedDiff);
+        await set("difficulty", $selectedDiff);
         carousel.goToPrev();
     }
     async function rightArrowClick(e:Event) {
-        if (renderedDiff == 3) {
-            renderedDiff = 0;
-        } else {
-            renderedDiff++;
-        }
+        renderedDiff = renderedDiff == 3 ? 0 : renderedDiff + 1;
         $selectedDiff = difficulties[renderedDiff].toLowerCase();
-        await set('difficulty', $selectedDiff);
+        await set("difficulty", $selectedDiff);
         carousel.goToNext();
     }
 </script>
@@ -33,6 +26,7 @@
 <div id="diffSelector">
     <Carousel
         dots={false}
+        initialPageIndex={difficulties.indexOf(capitalizeFirstLetter($selectedDiff))}
         bind:this={carousel}
         >
         <div slot="prev" on:click={leftArrowClick} class="arrow">
@@ -66,7 +60,7 @@
         justify-content: space-between;
         align-items: center;
 
-        margin-top: 20px;
+        margin-top: 2px;
     }
 
     .arrow {

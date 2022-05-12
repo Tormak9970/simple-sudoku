@@ -39,3 +39,8 @@ export function getEveryNth(arr:any[], n:number, offset?:number) {
   
     return result;
 }
+
+export function capitalizeFirstLetter(string:string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+  
