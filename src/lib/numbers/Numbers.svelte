@@ -1,9 +1,14 @@
 <script lang="ts">
-    import { selectedSubCellId, solver } from "../../stores";
+    import { rerender, selectedSubCellId, solver } from "../../stores";
 
     import NumberEntry from "./NumberEntry.svelte";
 
-    function clearClick(e:Event) { if ($selectedSubCellId && $solver.getCell($selectedSubCellId).editable) $solver.setCell($selectedSubCellId, "."); }
+    function clearClick(e:Event) {
+        if ($selectedSubCellId && $solver.getCell($selectedSubCellId).editable) {
+            $solver.setCell($selectedSubCellId, ".");
+            $rerender();
+        }
+    }
 </script>
 
 <div id="numbers">
