@@ -37,7 +37,10 @@
             }
         }
 
-        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null; $selectedNumber = null;
+        if (!$ctrlNumSelected && !$selectedSubCellId) {
+            $initialSelect = null;
+            $selectedNumber = null;
+        }
     }
 
     let numLeft = 9 - ($solver.cBoard.split(`${control}`).length - 1);

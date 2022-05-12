@@ -5,7 +5,7 @@
     --hover: #303030;
 
     --highlight: #82b74bff;
-    --highlight__hover: #8ac24e;
+    --highlight-hover: #8ac24e;
     --highlight-accent: #405d27ff;
     --highlight-accent__2: #32481eff;
     --warning: #e24a4a;
@@ -20,7 +20,7 @@
     --hover: #e6c895;
 
     --highlight: #e38a53;
-    --highlight__hover: #e17938;
+    --highlight-hover: #e17938;
     --highlight-accent: #d8573a;
 }
 [data-theme="earth"] {
@@ -30,7 +30,7 @@
     --hover: #b4bc7d;
 
     --highlight: #A2B38B;
-    --highlight__hover: #8da36e;
+    --highlight-hover: #8da36e;
     --highlight-accent: #eab1d8;
 }
 [data-theme="sea"] {
@@ -40,7 +40,7 @@
     --hover: #add1d7;
 
     --highlight: #4addea;
-    --highlight__hover: #46d5e2;
+    --highlight-hover: #46d5e2;
     --highlight-accent: #42C2FF;
 }
 [data-theme="grass"] {
@@ -50,7 +50,7 @@
     --hover: #d4a149;
 
     --highlight: #519259;
-    --highlight__hover: #3c7c44;
+    --highlight-hover: #3c7c44;
     --highlight-accent: #0cbd0c;
 }
 [data-theme="peace"] {
@@ -60,7 +60,7 @@
     --hover: #b66b6b;
 
     --highlight: #6D8299;
-    --highlight__hover: #4f6d8e;
+    --highlight-hover: #4f6d8e;
     --highlight-accent: #316B83;
 }
 
@@ -72,7 +72,7 @@
     --hover: #414141;
 
     --highlight: #82b74bff;
-    --highlight__hover: #8ac24e;
+    --highlight-hover: #8ac24e;
     --highlight-accent: #405d27ff;
 }
 [data-theme="sunset"] {
@@ -82,7 +82,7 @@
     --hover: #a9164e;
 
     --highlight: #C70039;
-    --highlight__hover: #d41249;
+    --highlight-hover: #d41249;
     --highlight-accent: #FF5733;
 }
 [data-theme="pop"] {
@@ -92,7 +92,7 @@
     --hover: #382f7f;
 
     --highlight: #E04D01;
-    --highlight__hover: #e03711;
+    --highlight-hover: #e03711;
     --highlight-accent: #FF7700;
 }
 [data-theme="space"] {
@@ -102,7 +102,7 @@
     --hover: #9d19a4;
 
     --highlight: #F10086;
-    --highlight__hover: #eb136a;
+    --highlight-hover: #eb136a;
     --highlight-accent: #cd5178;
 }
 [data-theme="magma"] {
@@ -112,6 +112,6 @@
     --hover: #5d0404;
 
     --highlight: #950101;
-    --highlight__hover: #b30808;
+    --highlight-hover: #b30808;
     --highlight-accent: #FF0000;
 }

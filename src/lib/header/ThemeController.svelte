@@ -95,7 +95,7 @@
 <div id="themeController">
     <div class="theme-selection" class:collapsed={!expanded}>
         {#each Object.entries(themes) as [name, theme]}
-            <ThemeBtn dataThemeName={name} --foreground={theme.fg} --background={theme.bg} --hover={theme.hvr} --highlight={theme.hlgt} --highlight__hover={theme.hlgtH} on:themeChanged={() => { expanded = false; }}/>
+            <ThemeBtn dataThemeName={name} --foreground={theme.fg} --background={theme.bg} --hover={theme.hvr} --highlight={theme.hlgt} --highlight-hover={theme.hlgtH} on:themeChanged={() => { expanded = false; }}/>
         {/each}
     </div>
     <div class="current-theme" on:click="{() => { expanded = !expanded; }}">
@@ -165,7 +165,7 @@
     }
 
     .current-theme:hover { cursor: pointer; background-color: var(--hover); }
-    .current-theme:hover > svg > path { fill: var(--highlight__hover); }
+    .current-theme:hover > svg > path { fill: var(--highlight-hover); }
     .current-theme > svg > path { fill: var(--highlight); }
 </style>
   

@@ -41,6 +41,7 @@
             } else {
                 $selectedSubCellId = firmId;
                 $selectedNumber = value == "" ? null : value;
+                console.log($selectedNumber == value, !$ctrlNumSelected)
             }
         }
 
@@ -68,16 +69,19 @@
             }
         }
 
-        if (!$ctrlNumSelected && !$selectedSubCellId) $initialSelect = null; $selectedNumber = null;
+        if (!$ctrlNumSelected && !$selectedSubCellId) {
+            $initialSelect = null;
+            $selectedNumber = null;
+        }
     }
 </script>
 
-<div class="sub-cell" class:clue={!editable} class:ghost-selected={
-    ((($selectedNumber == value) ||
-    (notesList.includes($selectedNumber?.toString()))) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
-    ($ctrlNumSelected == value) ||
-    (notesList.includes($ctrlNumSelected?.toString())) ||
-    ($selectedSubCellId == firmId && !editable)} class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"} class:error={$errorsList.includes(firmId)} on:click="{click}">
+<div class="sub-cell"
+    class:clue={!editable}
+    class:ghost-selected={(($selectedNumber == value || $ctrlNumSelected == value || notesList.includes($selectedNumber?.toString())) && (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
+    notesList.includes($ctrlNumSelected?.toString()) || ($selectedSubCellId == firmId && !editable)}
+    class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"}
+    class:error={$errorsList.includes(firmId)} on:click="{click}">
     {#if value == ""}
         <div class="notes-cont">
             {#each notesList as note}
@@ -136,7 +140,8 @@
     .clue { background-color: var(--foreground); }
 
     .ghost-selected { background-color: var(--highlight-accent); }
-    .selected, .selected:hover { background-color: var(--highlight); }
+    .selected { background-color: var(--highlight); }
+    .selected:hover { background-color: var(--highlight-hover); }
 
     .error { background-color: var(--warning); }
     .error:hover { background-color: var(--warning-hover); }

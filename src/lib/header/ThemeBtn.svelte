@@ -65,6 +65,6 @@
     }
 
     .btn-cont > svg > path { fill: var(--highlight); }
-    .btn-cont:hover > svg > path { fill: var(--highlight__hover); }
+    .btn-cont:hover > svg > path { fill: var(--highlight-hover); }
 </style>
   
