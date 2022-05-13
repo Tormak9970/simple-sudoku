@@ -1,114 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/Sudoku-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Sudoku</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" href="/Sudoku-logo.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple Sudoku</title>
+    <meta name="description" content="A minimalist sudoku game with changeable difficulty and persistent data.">
+    <meta name="theme-color" content="#82b74b" />
+    <link rel="apple-touch-icon" href="/sudoku-logo_maskable_x192.png">
+    <link rel="manifest" href="/manifest.json">
 
-  <style>
-    :root {
-      --font-color: rgb(231, 231, 231);
-      --foreground: #252525;
-      --highlight: #82b74bff;
-    }
+    <style>
+      :root {
+        --font-color: rgb(231, 231, 231);
+        --foreground: #252525;
+        --highlight: #82b74b;
+      }
 
-    [data-theme="light"] {
-      --font-color: rgb(20, 20, 20);
-      --foreground: #e9d7b6;
-      --highlight: #e38a53;
-    }
-    [data-theme="earth"] {
-      --font-color: rgb(20, 20, 20);
-      --foreground: #E4E9BE;
-      --highlight: #A2B38B;
-    }
-    [data-theme="sea"] {
-      --font-color: rgb(20, 20, 20);
-      --foreground: #c8f3fa;
-      --highlight: #85F4FF;
-    }
-    [data-theme="grass"] {
-      --font-color: rgb(20, 20, 20);
-      --foreground: #F0BB62;
-      --highlight: #519259;
-    }
-    [data-theme="peace"] {
-      --font-color: rgb(20, 20, 20);
-      --foreground: #d09393;
-      --highlight: #6D8299;
-    }
+      [data-theme="light"] {
+        --font-color: rgb(20, 20, 20);
+        --foreground: #e9d7b6;
+        --highlight: #e38a53;
+      }
+      [data-theme="earth"] {
+        --font-color: rgb(20, 20, 20);
+        --foreground: #E4E9BE;
+        --highlight: #A2B38B;
+      }
+      [data-theme="sea"] {
+        --font-color: rgb(20, 20, 20);
+        --foreground: #c8f3fa;
+        --highlight: #85F4FF;
+      }
+      [data-theme="grass"] {
+        --font-color: rgb(20, 20, 20);
+        --foreground: #F0BB62;
+        --highlight: #519259;
+      }
+      [data-theme="peace"] {
+        --font-color: rgb(20, 20, 20);
+        --foreground: #d09393;
+        --highlight: #6D8299;
+      }
 
-    [data-theme="dark"] {
-      --font-color: rgb(231, 231, 231);
-      --foreground: #252525;
-      --highlight: #82b74bff;
-    }
-    [data-theme="sunset"] {
-      --font-color: rgb(231, 231, 231);
-      --foreground: #900C3F;
-      --highlight: #C70039;
-    }
-    [data-theme="pop"] {
-      --font-color: rgb(231, 231, 231);
-      --foreground: #2A2550;
-      --highlight: #E04D01;
-    }
-    [data-theme="space"] {
-      --font-color: rgb(231, 231, 231);
-      --foreground: #711A75;
-      --highlight: #F10086;
-    }
-    [data-theme="magma"] {
-      --font-color: rgb(231, 231, 231);
-      --foreground: #3D0000;
-      --highlight: #950101;
-    }
+      [data-theme="dark"] {
+        --font-color: rgb(231, 231, 231);
+        --foreground: #252525;
+        --highlight: #82b74b;
+      }
+      [data-theme="sunset"] {
+        --font-color: rgb(231, 231, 231);
+        --foreground: #900C3F;
+        --highlight: #C70039;
+      }
+      [data-theme="pop"] {
+        --font-color: rgb(231, 231, 231);
+        --foreground: #2A2550;
+        --highlight: #E04D01;
+      }
+      [data-theme="space"] {
+        --font-color: rgb(231, 231, 231);
+        --foreground: #711A75;
+        --highlight: #F10086;
+      }
+      [data-theme="magma"] {
+        --font-color: rgb(231, 231, 231);
+        --foreground: #3D0000;
+        --highlight: #950101;
+      }
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
 
-      color: var(--font-color);
-      font-family: 'Source Sans Pro', sans-serif;
-    }
+        color: var(--font-color);
+        font-family: 'Source Sans Pro', sans-serif;
+      }
 
-    #app {
-      height: 100%;
-      width: 100%;
-    }
+      #app {
+        height: 100%;
+        width: 100%;
+      }
 
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--foreground);
-      border-radius: 4px;
-    }
+      ::-webkit-scrollbar-thumb {
+        background: var(--foreground);
+        border-radius: 4px;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--highlight);
-    }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--highlight);
+      }
 
-    ::-webkit-scrollbar-corner {
-      background: transparent;
-    }
-  </style>
-</head>
+      ::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+    </style>
+  </head>
 
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module">
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
+      }
+    </script>
+  </body>
 </html>

@@ -49,7 +49,7 @@
             bg:"#1a1a1a",
             fg:"#252525",
             hvr:"#303030",
-            hlgt:"#82b74bff",
+            hlgt:"#82b74b",
             hlgtH:"#8ac24e"
         },
         "sunset": {

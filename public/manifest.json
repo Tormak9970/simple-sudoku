@@ -1,0 +1,30 @@
+{
+    "short_name": "Simple Sudoku",
+    "name": "Simple Sudoku",
+    "icons": [
+        {
+            "src": "/sudoku-logo_maskable_x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/sudoku-logo_maskable_x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/sudoku-log_x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "id": "/",
+    "background_color": "#252525",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#82b74b",
+    "description": "Minimalist Sudoku",
+    "orientation": "portrait"
+}

@@ -4,7 +4,7 @@
     --foreground: #252525;
     --hover: #303030;
 
-    --highlight: #82b74bff;
+    --highlight: #82b74b;
     --highlight-hover: #8ac24e;
     --highlight-accent: #405d27ff;
     --highlight-accent__2: #32481eff;
@@ -71,7 +71,7 @@
     --foreground: #252525;
     --hover: #414141;
 
-    --highlight: #82b74bff;
+    --highlight: #82b74b;
     --highlight-hover: #8ac24e;
     --highlight-accent: #405d27ff;
 }
