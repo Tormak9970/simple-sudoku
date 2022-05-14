@@ -43,4 +43,9 @@ export function getEveryNth(arr:any[], n:number, offset?:number) {
 export function capitalizeFirstLetter(string:string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-  
+
+export function calcTotalTime(timer:string): number {
+    let [hours, minutes, seconds] = timer.split(":").map(v => parseInt(v));
+
+    return seconds + minutes * 60 + hours * 60 * 60;
+}

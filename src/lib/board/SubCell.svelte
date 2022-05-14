@@ -1,7 +1,10 @@
 <script lang="ts">
+    import { get } from "idb-keyval";
+    import { calcTotalTime } from "../../Utils";
+
     import { afterUpdate } from "svelte";
 
-    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, rerender, errorsList } from "../../stores";
+    import { selectedSubCellId, selectedNumber, solver, ctrlNumSelected, inNoteMode, initialSelect, rerender, errorsList, showVictory, isPaused, bestTime, timer, curIsBest } from "../../stores";
 
     export let cellId: number;
     export let subId: number;
@@ -26,9 +29,20 @@
         }
     }
 
-    afterUpdate(() => {
+    afterUpdate(async () => {
         getValue();
         if (editable) getNotes();
+        if ($solver.cBoard == $solver.sBoard) {
+            $isPaused = true;
+            const bTime = await get(`bestTime-${$solver.curDif}`);
+            $bestTime = bTime;
+            if (bTime) {
+                if (calcTotalTime(bTime) > calcTotalTime($timer)) {
+                    $curIsBest = true;
+                }
+            }
+            $showVictory = true;
+        }
     });
 
     async function click(e:Event) {

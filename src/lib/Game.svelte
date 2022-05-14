@@ -6,6 +6,7 @@
   import Board from "./board/Board.svelte";
   import Controls from "./controls/Controls.svelte";
   import GameHeader from "./header/GameHeader.svelte";
+  import VictoryModal from "./modals/VictoryModal.svelte";
   import Numbers from "./numbers/Numbers.svelte";
 
   export let newGame: boolean = false;
@@ -31,6 +32,7 @@
     <Numbers />
     <Controls />
   {/await}
+  <VictoryModal />
 </div>
 
 <style>

@@ -21,6 +21,10 @@ export const ctrlNumSelected = writable(null);
 export const showRestart = writable(false);
 export const restartCallback = writable(() => {});
 
+export const showVictory = writable(false);
+export const bestTime = writable(null);
+export const curIsBest = writable(false);
+
 export const errorsList = writable([]);
 
 // Universal stores
