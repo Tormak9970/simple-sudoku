@@ -1,5 +1,5 @@
 import { get, writable } from "svelte/store";
-import { Solver } from "./Solver";
+import { Solver } from "./lib/Solver";
 
 // Menu stores
 export const renderIdx = writable(0);

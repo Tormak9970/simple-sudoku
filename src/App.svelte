@@ -1,7 +1,7 @@
 <script>
-  import Game from "./lib/Game.svelte";
-  import ThemeController from "./lib/header/ThemeController.svelte";
-  import StartScreen from "./lib/StartScreen.svelte";
+  import Game from "./components/Game.svelte";
+  import ThemeController from "./components/header/ThemeController.svelte";
+  import StartScreen from "./components/StartScreen.svelte";
   import { newGame, renderIdx, selectedDiff } from "./stores";
 
 </script>
