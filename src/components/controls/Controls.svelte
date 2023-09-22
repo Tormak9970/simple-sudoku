@@ -5,7 +5,6 @@
     initialSelect,
     inNoteMode,
     isPaused,
-    rerender,
     restartCallback,
     selectedNumber,
     selectedSubCellId,
@@ -18,14 +17,14 @@
   import RestartModal from "../modals/RestartModal.svelte";
   import NumberEntry from "./NumberEntry.svelte";
 
-  $restartCallback = resClbk;
+  $restartCallback = reCallback;
 
-  function restart(e: Event) {
+  function restart() {
     $isPaused = true;
     $showRestart = true;
   }
 
-  async function resClbk() {
+  async function reCallback() {
     await $solver.restart();
     $timer = "00:00:00";
     $isPaused = false;
@@ -36,21 +35,19 @@
     $initialSelect = null;
     $ctrlNumSelected = null;
     $errorsList = [];
-    $rerender();
   }
   
-  function clearClick(e: Event) {
+  function clearClick() {
     if ($selectedSubCellId && $solver.getCell($selectedSubCellId).editable) {
       $solver.setCell($selectedSubCellId, ".");
-      $rerender();
     }
   }
 
-  function noteMode(e: Event) {
+  function noteMode() {
     $inNoteMode = !$inNoteMode;
   }
 
-  function validate(e: Event) {
+  function validate() {
     const errs = $solver.validate();
 
     if (errs.length > 0) {
@@ -58,9 +55,8 @@
     }
   }
 
-  async function undo(e: Event) {
+  async function undo() {
     await $solver.undo();
-    $rerender();
   }
 </script>
 
@@ -136,7 +132,7 @@
     flex-direction: column;
     align-items: center;
   }
-  
+
   .controls {
     display: flex;
     flex-direction: row;

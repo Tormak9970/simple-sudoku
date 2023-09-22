@@ -1,5 +1,6 @@
 import { get, set } from 'idb-keyval';
 import { arrayDiff, chunk, idToIdx, idxToId } from './Utils';
+import { board, moves, notes } from "../stores";
 
 /**
  * Calculates the "cross product" of two vectors.
@@ -168,18 +169,47 @@ type Move = {
   currentNotes: { [firmId: string]: number[] }
 }
 
+type Notes = { [firmId: string]: string[] }
+
 /**
  * Class for generating and solving sudoku boards.
  */
 export class Solver {
   initialBoard: string;
-  currentBoard: string;
+  _currentBoard: string;
   solvedBoard: string;
   currentDifficulty: string;
-  moves: Move[];
-  notes: { [firmId: string]: string[] }
+  _moves: Move[];
+  _notes: Notes
 
   constructor() { }
+
+  get currentBoard() {
+    return this._currentBoard;
+  }
+
+  set currentBoard(newBoard: string) {
+    this._currentBoard = newBoard;
+    board.set(newBoard);
+  }
+
+  get moves() {
+    return this._moves;
+  }
+
+  set moves(newMoves: Move[]) {
+    this._moves = newMoves;
+    moves.set([...newMoves]);
+  }
+
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(newNotes: Notes) {
+    this._notes = newNotes;
+    notes.set({...newNotes});
+  }
 
   #checkSquares(board: string[][]): boolean {
     const squares: string[][] = [];

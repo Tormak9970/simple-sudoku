@@ -1,10 +1,10 @@
 <script lang="ts">
   import {
+    board,
     ctrlNumSelected,
     errorsList,
     initialSelect,
     inNoteMode,
-    rerender,
     selectedNumber,
     selectedSubCellId,
     solver,
@@ -12,35 +12,31 @@
 
   export let control: number;
 
-  async function click(e: Event) {
+  async function click() {
     if (!$initialSelect) $initialSelect = "ctrl";
 
-    if ($initialSelect == "ctrl") {
-      $ctrlNumSelected = $ctrlNumSelected == control ? null : control;
+    if ($initialSelect === "ctrl") {
+      $ctrlNumSelected = $ctrlNumSelected === control ? null : control;
     }
 
     if ($selectedSubCellId) {
-      if ($errorsList.includes($selectedSubCellId))
-        $errorsList.splice($errorsList.indexOf($selectedSubCellId), 1);
+      if ($errorsList.includes($selectedSubCellId)) $errorsList.splice($errorsList.indexOf($selectedSubCellId), 1);
       $errorsList = [...$errorsList];
 
       const cellVal = $solver.getCell($selectedSubCellId);
       if (cellVal.editable) {
         if ($inNoteMode) {
           await $solver.setNote($selectedSubCellId, control.toString());
-          if (
-            $solver.getNote($selectedSubCellId).includes(control.toString())
-          ) {
+          if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
             $selectedNumber = control;
           } else {
             $selectedNumber = null;
-            $rerender();
           }
         } else {
-          if (cellVal.value != control.toString()) {
+          if (cellVal.value !== control.toString()) {
             await $solver.setCell($selectedSubCellId, control.toString());
             $selectedNumber = control;
-          } else if ($initialSelect == "cell") {
+          } else if ($initialSelect === "cell") {
             await $solver.setCell($selectedSubCellId, ".");
             $selectedNumber = null;
           }
@@ -54,7 +50,7 @@
     }
   }
 
-  $: numLeft = 9 - ($solver.currentBoard.split(`${control}`).length - 1);
+  $: numLeft = 9 - ($board.split(`${control}`).length - 1);
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

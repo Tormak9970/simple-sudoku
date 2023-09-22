@@ -9,6 +9,9 @@ export const selectedDifficulty = writable("medium");
 // Game stores
 export const timer = writable("00:00:00");
 export const solver = writable(new Solver());
+export const board = writable("");
+export const notes = writable({});
+export const moves = writable([]);
 
 export const initialSelect = writable(null);
 

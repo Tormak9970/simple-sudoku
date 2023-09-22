@@ -2,7 +2,7 @@
   import { get } from "idb-keyval";
   import { calcTotalTime } from "../../../lib/Utils";
 
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, onDestroy, onMount } from "svelte";
 
   import {
     selectedSubCellId,
@@ -11,23 +11,26 @@
     ctrlNumSelected,
     inNoteMode,
     initialSelect,
-    rerender,
     errorsList,
     showVictory,
     isPaused,
     bestTime,
     timer,
     curIsBest,
+    board,
   } from "../../../stores";
+    import { Unsubscriber } from "svelte/store";
 
   export let cellId: number;
   export let subId: number;
 
+  let boardUnsub: Unsubscriber;
+
   const firmId = `${cellId}|${subId}`;
 
   let editable = true; // set true if board is '.' here
-  let value = ""; // value of this square
-  let notesList: string[] = [];
+  let value = "";
+  $: notesList = editable && $board ? $solver.getNote(firmId) : [];
 
   function getValue() {
     if ($solver.currentBoard) {
@@ -36,40 +39,17 @@
       editable = data.editable;
     }
   }
-  function getNotes() {
-    if ($solver.currentBoard) {
-      const data = $solver.getNote(firmId);
-      notesList = data;
-    }
-  }
 
-  afterUpdate(async () => {
-    getValue();
-    if (editable) getNotes();
-    if ($solver.currentBoard == $solver.solvedBoard) {
-      $isPaused = true;
-      const bTime = await get(`bestTime-${$solver.currentDifficulty}`);
-      $bestTime = bTime;
-      if (bTime) {
-        if (calcTotalTime(bTime) > calcTotalTime($timer)) {
-          $curIsBest = true;
-        }
-      }
-      $showVictory = true;
-    }
-  });
-
-  async function click(e: Event) {
+  async function click() {
     if (!$initialSelect) $initialSelect = "cell";
 
-    if ($initialSelect == "cell") {
+    if ($initialSelect === "cell") {
       if ($selectedSubCellId == firmId) {
         $selectedSubCellId = null;
         $selectedNumber = null;
       } else {
         $selectedSubCellId = firmId;
-        $selectedNumber = value == "" ? null : value;
-        console.log($selectedNumber == value, !$ctrlNumSelected);
+        $selectedNumber = value === "" ? null : value;
       }
     }
 
@@ -84,17 +64,14 @@
           $selectedNumber = $ctrlNumSelected;
         } else {
           $selectedNumber = null;
-          $rerender();
         }
       } else {
         if (value != $ctrlNumSelected) {
           await $solver.setCell(firmId, $ctrlNumSelected.toString());
           $selectedNumber = $ctrlNumSelected;
-          $rerender();
-        } else if ($initialSelect == "ctrl") {
+        } else if ($initialSelect === "ctrl") {
           await $solver.setCell(firmId, ".");
           $selectedNumber = null;
-          $rerender();
         }
       }
     }
@@ -104,6 +81,31 @@
       $selectedNumber = null;
     }
   }
+
+  afterUpdate(async () => {
+    if ($board === $solver.solvedBoard) {
+      $isPaused = true;
+      $bestTime = await get(`bestTime-${$solver.currentDifficulty}`);
+
+      if ($bestTime) {
+        if (calcTotalTime($bestTime) > calcTotalTime($timer)) {
+          $curIsBest = true;
+        }
+      }
+
+      $showVictory = true;
+    }
+  });
+
+  onMount(() => {
+    boardUnsub = board.subscribe(() => {
+      getValue();
+    });
+  });
+
+  onDestroy(() => {
+    if (boardUnsub) boardUnsub();
+  });
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
