@@ -9,8 +9,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .menu-btn {
     width: 90px;
 

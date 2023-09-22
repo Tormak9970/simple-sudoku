@@ -8,7 +8,7 @@
     solver,
     bestTime,
     curIsBest,
-    renderIdx,
+    showMenu,
     showRestart,
     selectedNumber,
     selectedSubCellId,
@@ -30,9 +30,7 @@
     await del(`timer-${diff}`);
 
     if ($bestTime) {
-      if ($curIsBest) {
-        await set(`bestTime-${diff}`, $timer);
-      }
+      if ($curIsBest) await set(`bestTime-${diff}`, $timer);
     } else {
       await set(`bestTime-${diff}`, $timer);
     }
@@ -53,9 +51,7 @@
     $initialSelect = null;
     $ctrlNumSelected = null;
     $errorsList = [];
-    $renderIdx = 0;
-
-    $renderIdx = 0;
+    $showMenu = true;
   }
 </script>
 
@@ -90,8 +86,6 @@
 {/if}
 
 <style>
-  @import "../../themes.css";
-
   .backdrop {
     z-index: 10;
 

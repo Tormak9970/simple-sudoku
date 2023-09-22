@@ -37,8 +37,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   #numbers {
     margin: 2vh 0vh;
     width: min(60vh, 90vw);

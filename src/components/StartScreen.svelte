@@ -2,7 +2,7 @@
   import { get, set } from "idb-keyval";
   import { afterUpdate } from "svelte";
 
-  import { newGame, renderIdx, selectedDiff, theme } from "../stores";
+  import { newGame, showMenu, selectedDiff, theme } from "../stores";
   import DiffSelector from "./menu/DiffSelector.svelte";
   import MenuBtn from "./menu/MenuBtn.svelte";
 
@@ -35,11 +35,11 @@
 
   function resumeHandler(e: Event) {
     $newGame = false;
-    $renderIdx = 1;
+    $showMenu = false;
   }
   function ngHandler(e: Event) {
     $newGame = true;
-    $renderIdx = 1;
+    $showMenu = false;
   }
 
   let hasSave = existingDiffs.includes($selectedDiff);

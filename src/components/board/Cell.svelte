@@ -39,8 +39,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .cell {
     width: calc((100% - 10px) / 3);
     height: 100%;

@@ -15,8 +15,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .control-entry {
     display: flex;
     flex-direction: column;

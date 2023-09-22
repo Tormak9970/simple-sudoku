@@ -58,8 +58,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   #diffSelector {
     width: min(30vh, 50vw);
 

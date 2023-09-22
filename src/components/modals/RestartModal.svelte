@@ -28,8 +28,6 @@
 {/if}
 
 <style>
-  @import "../../themes.css";
-
   .backdrop {
     z-index: 10;
 

@@ -36,8 +36,6 @@
 </div>
 
 <style>
-  @import "../themes.css";
-
   #game {
     width: 100%;
 

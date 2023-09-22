@@ -6,7 +6,7 @@
     initialSelect,
     inNoteMode,
     isPaused,
-    renderIdx,
+    showMenu,
     selectedNumber,
     selectedSubCellId,
     showRestart,
@@ -21,7 +21,7 @@
 
   onMount(() => {
     intervalId = setInterval(async () => {
-      if (!$isPaused && $renderIdx == 1) {
+      if (!$isPaused && !$showMenu) {
         let [hours, minutes, seconds] = $timer
           .split(":")
           .map((v) => parseInt(v));
@@ -64,7 +64,7 @@
     $initialSelect = null;
     $ctrlNumSelected = null;
     $errorsList = [];
-    $renderIdx = 0;
+    $showMenu = true;
   }
 </script>
 
@@ -93,8 +93,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .game-header {
     width: min(60vh, 90vw);
     height: 5vh;

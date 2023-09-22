@@ -138,8 +138,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .sub-cell {
     width: calc((100% - 4px) / 3);
     height: 100%;

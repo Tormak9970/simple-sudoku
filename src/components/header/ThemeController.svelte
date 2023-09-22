@@ -120,8 +120,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .theme-controller {
     height: 16px;
 

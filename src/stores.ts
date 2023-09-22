@@ -2,7 +2,7 @@ import { get, writable } from "svelte/store";
 import { Solver } from "./lib/Solver";
 
 // Menu stores
-export const renderIdx = writable(0);
+export const showMenu = writable(true);
 export const newGame = writable(false);
 export const selectedDiff = writable("medium");
 
@@ -31,9 +31,9 @@ export const errorsList = writable([]);
 export const theme = writable('dark');
 
 export const rerender = writable(() => {
-    const oVal = get(selectedNumber);
-    selectedNumber.set("0");
-    selectedNumber.set(oVal);
+  const oVal = get(selectedNumber);
+  selectedNumber.set("0");
+  selectedNumber.set(oVal);
 });
 
 export const isPaused = writable(false);

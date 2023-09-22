@@ -97,8 +97,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .controls {
     display: flex;
     flex-direction: row;

@@ -41,8 +41,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .board {
     width: min(60vh, 90vw);
     height: min(60vh, 90vw);

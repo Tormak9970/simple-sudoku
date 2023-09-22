@@ -74,8 +74,6 @@
 </div>
 
 <style>
-  @import "../../themes.css";
-
   .number {
     display: flex;
     flex-direction: column;
