@@ -2,7 +2,7 @@
   import Game from "./components/Game.svelte";
   import Header from "./components/header/Header.svelte";
   // import StartScreen from "./components/StartScreen.svelte";
-  import { newGame, showMenu, selectedDiff } from "./stores";
+  import { newGame, showMenu, selectedDifficulty } from "./stores";
 
 
   //? From package.json
@@ -15,7 +15,7 @@
   {#if showMenu}
     <!-- <StartScreen /> -->
   {:else}
-    <Game difficulty={$selectedDiff} newGame={$newGame} />
+    <Game difficulty={$selectedDifficulty} newGame={$newGame} />
   {/if}
 </main>
 

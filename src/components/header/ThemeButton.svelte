@@ -21,8 +21,8 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="theme-btn" on:click={click}>
-  <div class="btn-cont">
+<div class="theme-button" on:click={click}>
+  <div class="button-cont">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
       <!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
       <path
@@ -33,7 +33,7 @@
 </div>
 
 <style>
-  .theme-btn {
+  .theme-button {
     height: 16px;
 
     display: flex;
@@ -51,7 +51,7 @@
     transition: background-color 0.4s ease-in-out;
   }
 
-  .theme-btn:hover {
+  .theme-button:hover {
     cursor: pointer;
     background-color: var(--hover);
   }
@@ -60,7 +60,7 @@
     width: 16px;
   }
 
-  .btn-cont {
+  .button-cont {
     border-radius: 50px;
 
     width: 16px;
@@ -69,10 +69,10 @@
     background-color: var(--foreground);
   }
 
-  .btn-cont > svg > path {
+  .button-cont > svg > path {
     fill: var(--highlight);
   }
-  .btn-cont:hover > svg > path {
+  .button-cont:hover > svg > path {
     fill: var(--highlight-hover);
   }
 </style>

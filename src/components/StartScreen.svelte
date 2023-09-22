@@ -2,7 +2,7 @@
   import { get, set } from "idb-keyval";
   import { afterUpdate } from "svelte";
 
-  import { newGame, showMenu, selectedDiff, theme } from "../stores";
+  import { newGame, showMenu, selectedDifficulty, theme } from "../stores";
   import DiffSelector from "./menu/DiffSelector.svelte";
   import MenuBtn from "./menu/MenuBtn.svelte";
 
@@ -21,9 +21,9 @@
 
     // get saved difficulty or save default
     if (await get("difficulty")) {
-      $selectedDiff = await get("difficulty");
+      $selectedDifficulty = await get("difficulty");
     } else {
-      await set("difficulty", $selectedDiff);
+      await set("difficulty", $selectedDifficulty);
     }
 
     // check existing saves
@@ -42,7 +42,7 @@
     $showMenu = false;
   }
 
-  let hasSave = existingDiffs.includes($selectedDiff);
+  let hasSave = existingDiffs.includes($selectedDifficulty);
   let bestTime = null;
 
   afterUpdate(async () => {
@@ -52,9 +52,9 @@
       const exts = await get(`iBoard-${diff}`);
       if (exts) existingDiffs.push(diff);
     }
-    hasSave = existingDiffs.includes($selectedDiff);
+    hasSave = existingDiffs.includes($selectedDifficulty);
 
-    bestTime = await get(`bestTime-${$selectedDiff}`);
+    bestTime = await get(`bestTime-${$selectedDifficulty}`);
   });
 </script>
 

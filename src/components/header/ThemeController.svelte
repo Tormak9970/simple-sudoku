@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ThemeBtn from "./ThemeBtn.svelte";
+  import ThemeButton from "./ThemeButton.svelte";
 
   type Theme = {
     fg: string;
@@ -95,7 +95,7 @@
 <div class="theme-controller">
   <div class="theme-selection" class:collapsed={!expanded}>
     {#each Object.entries(themes) as [name, theme]}
-      <ThemeBtn
+      <ThemeButton
         dataThemeName={name}
         --foreground={theme.fg}
         --background={theme.bg}
@@ -137,25 +137,29 @@
 
   .theme-selection {
     z-index: 1;
-    height: 100%;
-    right: -7px;
+    width: 28px;
+    top: 0;
+    margin-top: 1px;
 
     background-color: var(--foreground);
 
     display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+
     position: absolute;
 
     border-radius: 50px;
 
-    max-width: 400px;
+    max-height: 400px;
 
-    transition: max-width 1s ease-in-out, background-color 0.4s ease-in-out;
+    transition: max-height 1s ease-in-out, background-color 0.4s ease-in-out;
 
     overflow: hidden;
   }
 
   .collapsed {
-    max-width: 28px;
+    max-height: 28px;
     background-color: transparent;
   }
 

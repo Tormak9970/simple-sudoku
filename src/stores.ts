@@ -4,7 +4,7 @@ import { Solver } from "./lib/Solver";
 // Menu stores
 export const showMenu = writable(true);
 export const newGame = writable(false);
-export const selectedDiff = writable("medium");
+export const selectedDifficulty = writable("medium");
 
 // Game stores
 export const timer = writable("00:00:00");

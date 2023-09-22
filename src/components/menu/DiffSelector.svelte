@@ -1,24 +1,24 @@
 <script lang="ts">
   import Carousel from "svelte-carousel";
-  import { selectedDiff } from "../../stores";
+  import { selectedDifficulty } from "../../stores";
   import { set } from "idb-keyval";
   import { capitalizeFirstLetter } from "../../lib/Utils";
 
   export let difficulties: string[];
 
-  let renderedDiff = difficulties.indexOf(capitalizeFirstLetter($selectedDiff));
+  let renderedDiff = difficulties.indexOf(capitalizeFirstLetter($selectedDifficulty));
   let carousel;
 
   async function leftArrowClick(e: Event) {
     renderedDiff = renderedDiff == 0 ? 3 : renderedDiff - 1;
-    $selectedDiff = difficulties[renderedDiff].toLowerCase();
-    await set("difficulty", $selectedDiff);
+    $selectedDifficulty = difficulties[renderedDiff].toLowerCase();
+    await set("difficulty", $selectedDifficulty);
     carousel.goToPrev();
   }
   async function rightArrowClick(e: Event) {
     renderedDiff = renderedDiff == 3 ? 0 : renderedDiff + 1;
-    $selectedDiff = difficulties[renderedDiff].toLowerCase();
-    await set("difficulty", $selectedDiff);
+    $selectedDifficulty = difficulties[renderedDiff].toLowerCase();
+    await set("difficulty", $selectedDifficulty);
     carousel.goToNext();
   }
 </script>
@@ -27,7 +27,7 @@
   <Carousel
     dots={false}
     initialPageIndex={difficulties.indexOf(
-      capitalizeFirstLetter($selectedDiff)
+      capitalizeFirstLetter($selectedDifficulty)
     )}
     bind:this={carousel}
   >
