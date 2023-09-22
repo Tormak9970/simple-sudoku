@@ -33,10 +33,4 @@ export const errorsList = writable([]);
 // Universal stores
 export const theme = writable('dark');
 
-export const rerender = writable(() => {
-  const oVal = get(selectedNumber);
-  selectedNumber.set("0");
-  selectedNumber.set(oVal);
-});
-
 export const isPaused = writable(false);
