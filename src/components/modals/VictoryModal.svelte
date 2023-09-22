@@ -19,7 +19,7 @@
   } from "../../stores";
 
   async function close() {
-    const diff = $solver.curDif;
+    const diff = $solver.currentDifficulty;
     await del(`iBoard-${diff}`);
     await del(`cBoard-${diff}`);
     await del(`sBoard-${diff}`);
@@ -62,7 +62,7 @@
       <div class="content">
         <div style="font-size: 20px; margin-bottom: 3px;">Board Complete!</div>
         <div style="font-size: 16px; margin-bottom: 7px;">
-          Difficulty: {capitalizeFirstLetter($solver.curDif)}
+          Difficulty: {capitalizeFirstLetter($solver.currentDifficulty)}
         </div>
         {#if $bestTime}
           {#if $curIsBest}

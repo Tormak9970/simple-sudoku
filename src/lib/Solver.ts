@@ -2,10 +2,10 @@ import { get, set } from 'idb-keyval';
 import { arrayDiff, chunk, idToIdx, idxToId } from './Utils';
 
 /**
- * Calculates the cross product of two vectors.
+ * Calculates the "cross product" of two vectors.
  * @param A The first vector.
  * @param B The second vector.
- * @returns The cross product.
+ * @returns The "cross product".
  */
 function cross(A: string[], B: string[]): string[] {
   let C = [];
@@ -17,37 +17,56 @@ function cross(A: string[], B: string[]): string[] {
   return C;
 }
 
-const digits: string = '123456789';
-const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-const cols = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const DIGITS: string = '123456789';
+const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+const COLUMNS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-const squares = cross(rows, cols);
-let unitlist = [];
-for (let c in cols) unitlist.push(cross(rows, [cols[c]]));
-for (let r in rows) unitlist.push(cross([rows[r]], cols));
+const squares = cross(ROWS, COLUMNS);
+const UNITS_LIST = [];
+for (let column of COLUMNS) {
+  UNITS_LIST.push(cross(ROWS, [column]));
+}
+for (let row in ROWS) {
+  UNITS_LIST.push(cross([row], COLUMNS));
+}
 
-let rrows = [['A', 'B', 'C'], ['D', 'E', 'F'], ['G', 'H', 'I']];
-let ccols = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
-for (let rs in rrows) for (let cs in ccols) unitlist.push(cross(rrows[rs], ccols[cs]));
+const ROW_MATRIX = [
+  ['A', 'B', 'C'],
+  ['D', 'E', 'F'],
+  ['G', 'H', 'I']
+];
+const COLUMN_MATRIX = [
+  ['1', '2', '3'],
+  ['4', '5', '6'],
+  ['7', '8', '9']
+];
+for (const row of ROW_MATRIX) {
+  for (const column of COLUMN_MATRIX) {
+    UNITS_LIST.push(cross(row, column));
+  }
+}
 
-let units = {};
-for (let s in squares) {
-  units[squares[s]] = [];
-  for (let u in unitlist) {
-    if (unitlist[u].includes(squares[s])) {
-      units[squares[s]].push(unitlist[u]);
+const UNITS = {};
+for (let square of squares) {
+  UNITS[square] = [];
+
+  for (let unit in UNITS_LIST) {
+    if (unit.includes(square)) {
+      UNITS[square].push(unit);
     }
   }
 }
 
-let peers = {};
-for (let s in squares) {
-  peers[squares[s]] = {};
-  for (let u in units[squares[s]]) {
-    let ul = units[squares[s]][u];
-    for (let s2 in ul) {
-      if (ul[s2] != squares[s]) {
-        peers[squares[s]][ul[s2]] = true;
+const PEERS = {};
+for (const squareIndex in squares) {
+  PEERS[squareIndex] = {};
+
+  for (const unitIndex in UNITS[squareIndex]) {
+    let unitList = UNITS[squareIndex][unitIndex];
+
+    for (const secondSquareIndex in unitList) {
+      if (unitList[secondSquareIndex] !== secondSquareIndex) {
+        PEERS[squareIndex][unitList[secondSquareIndex]] = true;
       }
     }
   }
@@ -90,50 +109,51 @@ function shuffle(arr: any[]): any[] {
   return array;
 }
 
-function dup(obj: { [x: string]: any; }) {
-  let d = {};
-  for (let f in obj) {
-    d[f] = obj[f];
-  }
-  return d;
-}
-
 function center(s: string | any[], w: number) {
   let excess = w - s.length;
+
   while (excess > 0) {
-    if (excess % 2) s += " "; else s = " " + s;
+    if (excess % 2) {
+      s += " ";
+    } else {
+      s = " " + s;
+    }
+
     excess -= 1;
   }
+
   return s;
 }
 
 /**
+ * ? Useful for debugging.
  * Generates a string for displaying the board in the console.
  * @param values The values to display.
  * @returns The board as a string.
  */
-export function display(values: { [x: string]: any; }): string { // Used for debugging
+export function display(values: { [x: string]: any; }): string {
   let width = 0;
-  for (let s in squares) {
-    if (values[squares[s]].length > width) width = values[squares[s]].length;
+
+  for (const square of squares) {
+    if (values[square].length > width) width = values[square].length;
   }
 
   width += 1;
   let seg = "";
-  for (let i = 0; i < width; i++) seg += "---";
+  for (let i = 0; i < width; i++) {
+    seg += "---";
+  }
 
   let line = "\n" + [seg, seg, seg].join("+");
   let board = "";
 
-  // @ts-ignore
-  for (let r in rows) {
-    // @ts-ignore
-    for (let c in cols) {
-      board += center(values[rows[r] + cols[c]], width);
-      if (c == '2' || c == '5') board += "|";
+  for (const row of ROWS) {
+    for (const column of COLUMNS) {
+      board += center(values[row + column], width);
+      if (column === '2' || column === '5') board += "|";
     }
 
-    if (r == '2' || r == '5') board += line;
+    if (row === '2' || row === '5') board += line;
     board += "\n";
   }
 
@@ -141,17 +161,22 @@ export function display(values: { [x: string]: any; }): string { // Used for deb
   return board;
 }
 
-type move = { firmId: string, newVal: string, oldVal: string, cNotes: { [firmId: string]: number[] } }
+type Move = {
+  firmId: string,
+  newVal: string,
+  oldVal: string,
+  currentNotes: { [firmId: string]: number[] }
+}
 
 /**
  * Class for generating and solving sudoku boards.
  */
 export class Solver {
-  iBoard: string; // initial Board
-  cBoard: string; // current Board
-  sBoard: string; // solved Board
-  curDif: string;
-  moves: move[];
+  initialBoard: string;
+  currentBoard: string;
+  solvedBoard: string;
+  currentDifficulty: string;
+  moves: Move[];
   notes: { [firmId: string]: string[] }
 
   constructor() { }
@@ -160,14 +185,14 @@ export class Solver {
     const squares: string[][] = [];
 
     for (let i = 0; i < 9; i++) {
-      const iVals = [];
+      const row = [];
 
       for (let j = 0; j < 3; j++) {
-        const sIdx = (i % 3) * 3;
-        iVals.push(...(board[j + Math.floor(i / 3) * 3].slice(sIdx, sIdx + 3)));
+        const columnIndx = (i % 3) * 3;
+        row.push(...(board[j + Math.floor(i / 3) * 3].slice(columnIndx, columnIndx + 3)));
       }
 
-      squares.push(iVals);
+      squares.push(row);
     }
 
     return !squares.some((s) => !s.includes('.')) && !squares.some((s) => s.every((ss) => ss == '.'));
@@ -176,78 +201,88 @@ export class Solver {
   #checkRows(board: string[][]): boolean { return !board.some((s) => !s.includes('.')); }
 
   #checkCols(board: string[][]): boolean {
-    const cols = [];
+    const columns = [];
 
     for (let i = 0; i < 9; i++) {
-      const colVals = [];
+      const columnValues = [];
 
       for (let j = 0; j < 9; j++) {
-        colVals.push(board[j][i]);
+        columnValues.push(board[j][i]);
       }
 
-      cols.push(colVals);
+      columns.push(columnValues);
     }
 
-    return !cols.some((s) => !s.includes('.'));
+    return !columns.some((s) => !s.includes('.'));
   }
 
   #checkQuality(board: string): boolean {
-    let bArr: string[][] = [];
+    let boardArray: string[][] = [];
 
     for (let i = 0; i < 9; i++) {
-      bArr.push(board.substring(i * 9, (i + 1) * 9).split(''));
+      boardArray.push(board.substring(i * 9, (i + 1) * 9).split(''));
     }
 
-    return this.#checkSquares(bArr) && this.#checkRows(bArr) && this.#checkCols(bArr);
+    return this.#checkSquares(boardArray) && this.#checkRows(boardArray) && this.#checkCols(boardArray);
   }
 
-  #random_puzzle(N = 17) {
-    /** Make a random puzzle with N or more assignments. Restart on contradictions.
+  #randomPuzzle(numberOfHints = 17) {
+    /** Make a random puzzle with "numberOfHints" or more assignments. Restart on contradictions.
      * Note the resulting puzzle is not guaranteed to be solvable, but empirically
      * about 99.8% of them are solvable. Some have multiple solutions.
      */
-    const values = Object.assign({}, ...squares.map((s) => { let res = {}; res[s] = digits; return res; }));
+    const values = Object.assign({}, ...squares.map((square) => {
+      let res = {};
+      res[square] = DIGITS;
+      return res;
+    }));
 
-    for (const s of shuffle(squares)) {
-      if (!this.#assign(values, s, values[s][Math.floor(Math.random() * values[s].length)])) break;
+    for (const square of shuffle(squares)) {
+      if (!this.#assign(values, square, values[square][Math.floor(Math.random() * values[square].length)])) break;
 
-      const ds = [];
-      for (const s of squares) {
-        if (values[s].length === 1) ds.push(values[s])
+      const singleOptions = [];
+      for (const square of squares) {
+        if (values[square].length === 1) singleOptions.push(values[square])
       }
 
-      if (ds.length >= N && (new Set(ds)).size >= 8) {
-        const res = squares.map((s) => {
-          return (values[s].length === 1) ? values[s] : '.';
+      if (singleOptions.length >= numberOfHints && (new Set(singleOptions)).size >= 8) {
+        const res = squares.map((square) => {
+          return (values[square].length === 1) ? values[square] : '.';
         }).join('');
 
         if (this.#checkQuality(res)) {
           return res;
         } else {
-          return this.#random_puzzle(N); // Make a better puzzle
+          return this.#randomPuzzle(numberOfHints); // Make a better puzzle
         }
       }
     }
 
-    return this.#random_puzzle(N); // Give up and make a new puzzle
+    return this.#randomPuzzle(numberOfHints); // Give up and make a new puzzle
   }
 
-  #flip(board: string[][], dir: string): string[][] {
-    function hFlip(board: string[][]): string[][] { for (let i = 0; i < board.length; i++) { board[i] = board[i].reverse(); } return board; }
-    function vFlip(board: string[][]): string[][] { return board.reverse(); }
+  #flip(board: string[][], dir: 'h' | 'v' | 'b' | 'n'): string[][] {
+    function horizontalFlip(board: string[][]): string[][] {
+      for (let i = 0; i < board.length; i++) {
+        board[i] = board[i].reverse();
+      }
+      
+      return board;
+    }
+    function verticalFlip(board: string[][]): string[][] { return board.reverse(); }
 
     const temp = [...board];
 
     switch (dir) {
       case 'h':
-        return hFlip(temp);
+        return horizontalFlip(temp);
       case 'v':
-        return vFlip(temp);
+        return verticalFlip(temp);
       case 'b': {
         if (Math.round(Math.random()) === 1) {
-          return vFlip(hFlip(temp));
+          return verticalFlip(horizontalFlip(temp));
         } else {
-          return hFlip(vFlip(temp));
+          return horizontalFlip(verticalFlip(temp));
         }
       }
       case 'n':
@@ -259,9 +294,10 @@ export class Solver {
     let temp = [...board];
 
     function rotate(board: string[][]): string[][] {
-      const n = board.length;
-      const x = Math.floor(n / 2);
-      const y = n - 1;
+      const length = board.length;
+      const x = Math.floor(length / 2);
+      const y = length - 1;
+
       for (let i = 0; i < x; i++) {
         for (let j = i; j < y - i; j++) {
           let k = board[i][j];
@@ -275,143 +311,167 @@ export class Solver {
       return board;
     }
 
-    for (let i = 0; i < rot; i++) { temp = rotate(temp); }
+    for (let i = 0; i < rot; i++) {
+      temp = rotate(temp);
+    }
 
     return temp;
   }
 
   #transform(board: string) {
-    const flips = ['n', 'h', 'v', 'b'];
+    const flips: ['n', 'h', 'v', 'b'] = ['n', 'h', 'v', 'b'];
 
-    const rot = Math.round(Math.random() * 3);
-    const flp = flips[Math.round(Math.random() * 3)];
+    const rotation = Math.round(Math.random() * 3);
+    const flip = flips[Math.round(Math.random() * 3)];
 
-    let bArr: string[][] = [];
+    let boardArray: string[][] = [];
 
     for (let i = 0; i < 9; i++) {
-      bArr.push(board.substring(i * 9, (i + 1) * 9).split(''));
+      boardArray.push(board.substring(i * 9, (i + 1) * 9).split(''));
     }
 
     if (Math.round(Math.random()) === 1) {
-      bArr = this.#flip(bArr, flp);
-      bArr = this.#rotate(bArr, rot);
+      boardArray = this.#flip(boardArray, flip);
+      boardArray = this.#rotate(boardArray, rotation);
     } else {
-      bArr = this.#rotate(bArr, rot);
-      bArr = this.#flip(bArr, flp);
+      boardArray = this.#rotate(boardArray, rotation);
+      boardArray = this.#flip(boardArray, flip);
     }
 
-    return bArr.flat().join('');
+    return boardArray.flat().join('');
   }
 
-  #assign(values: { [x: string]: string; }, sq: string, dig: string) { // Eliminate all the other values (except dig) from values[sq] and propagate.
+  #assign(values: { [x: string]: string; }, square: string, digit: string) { // Eliminate all the other values (except dig) from values[sq] and propagate.
     let result = true;
-    let vals = values[sq];
-    for (let d = 0; d < vals.length; d++) {
-      if (vals.charAt(d) != dig) {
-        result = result && !!this.#eliminate(values, sq, vals.charAt(d));
+    let squareValues = values[square];
+
+    for (let i = 0; i < squareValues.length; i++) {
+      if (squareValues.charAt(i) !== digit) {
+        result = result && !!this.#eliminate(values, square, squareValues.charAt(i));
       }
     }
+
     return (result ? values : null);
   }
 
-  #eliminate(values: { [x: string]: string; }, sq: string, dig: string) {
-    if (!values[sq].includes(dig)) {
+  #eliminate(values: { [x: string]: string; }, square: string, digit: string) {
+    if (!values[square].includes(digit)) {
       return values; // already eliminated.
     }
 
-    values[sq] = values[sq].replace(dig, "");
-    if (values[sq].length == 0) {
+    values[square] = values[square].replace(digit, "");
+
+    if (values[square].length == 0) {
       return false; // invalid input ?
-    } else if (values[sq].length == 1) { // If there is only one value (values[sq]) left in square, remove it from peers
+    } else if (values[square].length == 1) { // If there is only one value (values[sq]) left in square, remove it from peers
       let result = true;
-      for (let s in peers[sq]) {
-        result = result && !!this.#eliminate(values, s, values[sq]);
+
+      for (const peer of PEERS[square]) {
+        result = result && !!this.#eliminate(values, peer, values[square]);
       }
 
       if (!result) return false;
     }
-    for (let u in units[sq]) {
-      let dplaces = [];
-      for (let s in units[sq][u]) {
-        let sq2 = units[sq][u][s];
-        if (values[sq2].includes(dig)) {
-          dplaces.push(sq2);
+
+    for (const unitIndex in UNITS[square]) {
+      let digitPlaces = [];
+
+      for (const squareIndex in UNITS[square][unitIndex]) {
+        let unitSquare = UNITS[square][unitIndex][squareIndex];
+
+        if (values[unitSquare].includes(digit)) {
+          digitPlaces.push(unitSquare);
         }
       }
 
-      if (dplaces.length == 0) {
+      if (digitPlaces.length == 0) {
         return false;
-      } else if (dplaces.length == 1) {
-        if (!this.#assign(values, dplaces[0], dig)) {
+      } else if (digitPlaces.length == 1) {
+        if (!this.#assign(values, digitPlaces[0], digit)) {
           return false;
         }
       }
     }
+
     return values;
   }
 
   search(values: { [x: string]: string; }) {
-    if (!values) return false;
+    if (!values) return null;
 
-    let min = 10, max = 1, sq = null;
-    for (let s in squares) {
-      if (values[squares[s]].length > max) max = values[squares[s]].length;
+    let min = 10, max = 1, targetSquare = null;
+    for (let square of squares) {
+      if (values[square].length > max) max = values[square].length;
 
-      if (values[squares[s]].length > 1 && values[squares[s]].length < min) {
-        min = values[squares[s]].length;
-        sq = squares[s];
+      if (values[square].length > 1 && values[square].length < min) {
+        min = values[square].length;
+        targetSquare = square;
       }
     }
 
-    if (max == 1) return values;
+    if (max === 1) return values;
 
-    for (let d = 0; d < values[sq].length; d++) {
-      let res = this.search(this.#assign({...values}, sq, values[sq].charAt(d)));
+    for (let i = 0; i < values[targetSquare].length; i++) {
+      let res = this.search(this.#assign({...values}, targetSquare, values[targetSquare].charAt(i)));
 
       if (res) return res;
     }
-    return false;
+
+    return null;
   }
+
 
   solve(board: string): string { return this.search(this.parseBoard(board)); }
 
+  /**
+   * Parses a board and returns the value of each square.
+   * @param board The board to parse.
+   * @returns An object indicating the value in every position.
+   */
   parseBoard(board: string) {
     let board2 = "";
-    for (let c = 0; c < board.length; c++) {
-      if ("0.-123456789".includes(board.charAt(c))) {
-        board2 += board.charAt(c);
+    for (let character = 0; character < board.length; character++) {
+      if ("0.-123456789".includes(board.charAt(character))) {
+        board2 += board.charAt(character);
       }
     }
 
     let values = {};
-    for (let s in squares) {
-      values[squares[s]] = digits;
+    for (let square of squares) {
+      values[square] = DIGITS;
     }
-    for (let s in squares) {
-      if (digits.indexOf(board2.charAt(parseInt(s))) >= 0 && !this.#assign(values, squares[s], board2.charAt(parseInt(s)))) return false;
+    for (let squareIndex in squares) {
+      if (DIGITS.indexOf(board2.charAt(parseInt(squareIndex))) >= 0 && !this.#assign(values, squares[squareIndex], board2.charAt(parseInt(squareIndex)))) return false;
     }
+
     return values;
   }
 
+  /**
+   * Gets the board for the given difficulty.
+   * @param difficulty The difficulty of the board to get.
+   * @param newGame Whether this is a new game or not.
+   * @returns The board.
+   */
   async getBoard(difficulty: string, newGame: boolean) {
-    this.curDif = difficulty;
+    this.currentDifficulty = difficulty;
 
-    if (!newGame && await get(`iBoard-${difficulty}`)) {
-      this.iBoard = await get(`iBoard-${difficulty}`);
-      this.cBoard = await get(`cBoard-${difficulty}`);
-      this.sBoard = await get(`sBoard-${difficulty}`);
+    if (!newGame && await get(`initialBoard-${difficulty}`)) {
+      this.initialBoard = await get(`initialBoard-${difficulty}`);
+      this.currentBoard = await get(`currentBoard-${difficulty}`);
+      this.solvedBoard = await get(`solvedBoard-${difficulty}`);
       this.moves = JSON.parse(await get(`moves-${difficulty}`));
       this.notes = JSON.parse(await get(`notes-${difficulty}`));
 
-      return this.iBoard;
+      return this.initialBoard;
     }
 
-    const df = difficulties[difficulty];
-    const numEntr = Math.round(Math.random() * (df.max - df.min)) + df.min;
+    const difficultyData = difficulties[difficulty];
+    const numberOfHints = Math.round(Math.random() * (difficultyData.max - difficultyData.min)) + difficultyData.min;
 
-    this.iBoard = this.#transform(this.#random_puzzle(numEntr));
-    this.cBoard = this.iBoard;
-    this.sBoard = Object.values(this.solve(this.iBoard)).join('');
+    this.initialBoard = this.#transform(this.#randomPuzzle(numberOfHints));
+    this.currentBoard = this.initialBoard;
+    this.solvedBoard = Object.values(this.solve(this.initialBoard)).join('');
     this.moves = [];
 
     this.notes = {};
@@ -423,132 +483,155 @@ export class Solver {
 
     await this.save();
 
-    return this.iBoard;
+    return this.initialBoard;
   }
 
-  #notesCheckRow([rowIdx, colIdx]: number[], newVal: string) {
-    const cNotes = {};
+  #notesCheckRow([rowIdx, columnIdx]: number[], newVal: string) {
+    const currentNotes = {};
 
     for (let i = 0; i < 9; i++) {
-      if (i != colIdx) {
+      if (i !== columnIdx) {
         const firmId = idxToId(rowIdx, i);
 
         if (this.notes[firmId].includes(newVal)) {
-          const oNotes = this.#setNote(firmId, newVal);
-          cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+          const oldNotes = this.#setNote(firmId, newVal);
+          currentNotes[firmId] = arrayDiff(oldNotes, this.notes[firmId]);
         }
       }
     }
 
-    return cNotes;
+    return currentNotes;
   }
 
-  #notesCheckCol([rowIdx, colIdx]: number[], newVal: string) {
-    const cNotes = {};
+  #notesCheckColumn([rowIdx, colIdx]: number[], newVal: string) {
+    const currentNotes = {};
 
     for (let i = 0; i < 9; i++) {
-      if (i != rowIdx) {
+      if (i !== rowIdx) {
         const firmId = idxToId(i, colIdx);
 
         if (this.notes[firmId].includes(newVal)) {
-          const oNotes = this.#setNote(firmId, newVal);
-          cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+          const oldNotes = this.#setNote(firmId, newVal);
+          currentNotes[firmId] = arrayDiff(oldNotes, this.notes[firmId]);
         }
       }
     }
 
-    return cNotes;
+    return currentNotes;
   }
 
-  #notesCheckSqr(firmId: string, newVal: string) {
-    const cNotes = {};
+  #notesCheckSquare(firmId: string, newVal: string) {
+    const currentNotes = {};
     const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
 
     for (let i = 0; i < 9; i++) {
       const subFirmId = `${cellId}|${i}`;
-      if (subFirmId != firmId) {
+
+      if (subFirmId !== firmId) {
         if (this.notes[subFirmId].includes(newVal)) {
-          const oNotes = this.#setNote(subFirmId, newVal);
-          cNotes[subFirmId] = arrayDiff(oNotes, this.notes[subFirmId]);
+          const oldNotes = this.#setNote(subFirmId, newVal);
+          currentNotes[subFirmId] = arrayDiff(oldNotes, this.notes[subFirmId]);
         }
       }
     }
 
-    return cNotes;
+    return currentNotes;
   }
 
   #checkNotes(firmId: string, newVal: string): { [cellId: string]: number[] } {
-    const cNotes = {};
+    const currentNotes = {};
     const idxs = idToIdx(firmId);
-    const oNotes = this.#setNote(firmId, "");
+    const oldNotes = this.#setNote(firmId, "");
 
-    cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+    currentNotes[firmId] = arrayDiff(oldNotes, this.notes[firmId]);
 
-    Object.assign(cNotes, this.#notesCheckRow(idxs, newVal));
-    Object.assign(cNotes, this.#notesCheckCol(idxs, newVal));
-    Object.assign(cNotes, this.#notesCheckSqr(firmId, newVal));
+    Object.assign(currentNotes, this.#notesCheckRow(idxs, newVal));
+    Object.assign(currentNotes, this.#notesCheckColumn(idxs, newVal));
+    Object.assign(currentNotes, this.#notesCheckSquare(firmId, newVal));
 
-    return cNotes
+    return currentNotes
   }
 
   #setCell(firmId: string, newVal: string): string {
-    let cBoardArr = this.cBoard.split("");
+    let currentBoardArray = this.currentBoard.split("");
     const idxs = idToIdx(firmId);
     const idx = idxs[0] * 9 + idxs[1];
 
-    const oldVal = cBoardArr.splice(idx, 1, newVal);
-    this.cBoard = cBoardArr.join("");
+    const oldVal = currentBoardArray.splice(idx, 1, newVal);
+    this.currentBoard = currentBoardArray.join("");
 
     return oldVal[0];
   }
 
+  /**
+   * Sets the provided cell to the given value.
+   * @param firmId The id of the cell to set.
+   * @param newVal The new value of the cell.
+   */
   async setCell(firmId: string, newVal: string): Promise<void> {
-    const oldVal = this.#setCell(firmId, newVal);
+    const oldValue = this.#setCell(firmId, newVal);
 
-    const cNotes = this.#checkNotes(firmId, newVal);
+    const currentNotes = this.#checkNotes(firmId, newVal);
 
     this.moves.push({
       "firmId": firmId,
       "newVal": newVal,
-      "oldVal": oldVal,
-      "cNotes": cNotes
+      "oldVal": oldValue,
+      "currentNotes": currentNotes
     });
 
     await this.save();
   }
 
+  /**
+   * Gets the data for the given cell.
+   * @param firmId The id of the cell to get.
+   * @returns The cell.
+   */
   getCell(firmId: string): { value: string, editable: boolean } {
-    if (this.cBoard) {
-      const iBoardArr = this.iBoard.split("");
-      const cBoardArr = this.cBoard.split("");
+    if (this.currentBoard) {
+      const initialBoardArray = this.initialBoard.split("");
+      const currentBoardArray = this.currentBoard.split("");
       const idxs = idToIdx(firmId);
       const idx = idxs[0] * 9 + idxs[1];
 
-      if (cBoardArr[idx] != ".") {
-        return { "value": cBoardArr[idx], "editable": iBoardArr[idx] == "." }
+      if (currentBoardArray[idx] != ".") {
+        return {
+          "value": currentBoardArray[idx],
+          "editable": initialBoardArray[idx] == "."
+        }
       } else {
-        return { "value": "", "editable": true }
+        return {
+          "value": "",
+          "editable": true
+        }
       }
     }
   }
 
-  getSquare(firmId: string) {
+  /**
+   * Gets the values for a given square.
+   * @param firmId The firm id of the square to get.
+   * @returns The square's values.
+   */
+  getSquare(firmId: string): string[] {
     const [cellId, subId] = firmId.split('|').map(v => parseInt(v));
 
-    const cBoardArr = chunk(this.cBoard.split(""), 9);
-    const cVals = [];
+    const currentBoardArray = chunk(this.currentBoard.split(""), 9);
+    const currentValues = [];
 
     for (let i = 0; i < 3; i++) {
-      const sIdx = (cellId % 3) * 3;
-      cVals.push(...(cBoardArr[i + Math.floor(cellId / 3) * 3].slice(sIdx, sIdx + 3)));
+      const subIdx = (cellId % 3) * 3;
+      currentValues.push(...(currentBoardArray[i + Math.floor(cellId / 3) * 3].slice(subIdx, subIdx + 3)));
     }
 
-    return cVals;
+    return currentValues;
   }
 
   #setNote(firmId: string, note: string): string[] {
-    const oNotes = [...this.notes[firmId]];
-    if (note == "") {
+    const oldNotes = [...this.notes[firmId]];
+
+    if (note === "") {
       this.notes[firmId] = [];
     } else {
       if (this.notes[firmId].includes(note)) {
@@ -558,14 +641,20 @@ export class Solver {
         this.notes[firmId].sort((a, b) => parseInt(a) - parseInt(b));
       }
     }
-    return oNotes;
+
+    return oldNotes;
   }
 
+  /**
+   * Sets the note of a given cell.
+   * @param firmId The firm id of the cell.
+   * @param note The note to set.
+   */
   async setNote(firmId: string, note: string): Promise<void> {
-    const oNotes = this.#setNote(firmId, note);
+    const oldNotes = this.#setNote(firmId, note);
 
-    const cNotes = {}
-    cNotes[firmId] = arrayDiff(oNotes, this.notes[firmId]);
+    const currentNotes = {}
+    currentNotes[firmId] = arrayDiff(oldNotes, this.notes[firmId]);
 
     const oldVal = this.#setCell(firmId, ".");
 
@@ -573,12 +662,17 @@ export class Solver {
       "firmId": firmId,
       "newVal": ".",
       "oldVal": oldVal,
-      "cNotes": cNotes
+      "currentNotes": currentNotes
     });
 
     await this.save();
   }
 
+  /**
+   * Gets the notes for a cell.
+   * @param firmId The firm id of the cell whoes notes should be gotten.
+   * @returns The cell's notes, or null if it isn't editable.
+   */
   getNote(firmId: string): string[] | null {
     if (this.getCell(firmId).editable) {
       return this.notes[firmId];
@@ -587,37 +681,49 @@ export class Solver {
     }
   }
 
+  /**
+   * Validates the current board by comparing it to the solved board.
+   * @returns A list of mistakes made.
+   */
   validate() {
-    const cBoardArr = this.cBoard.split("");
-    const errs = Array.from(this.sBoard.split("").entries()).filter((v: [number, string]) => cBoardArr[v[0]] != v[1] && cBoardArr[v[0]] != ".").map((v) => idxToId(Math.floor(v[0] / 9), v[0] % 9));
-    return errs;
+    const currentBoardArray = this.currentBoard.split("");
+    const errors = Array.from(this.solvedBoard.split("").entries()).filter((v: [number, string]) => currentBoardArray[v[0]] != v[1] && currentBoardArray[v[0]] != ".").map((v) => idxToId(Math.floor(v[0] / 9), v[0] % 9));
+    return errors;
   }
 
+  /**
+   * Restarts this board by resetting it to its initial state.
+   */
   async restart() {
-    this.cBoard = this.iBoard;
+    this.currentBoard = this.initialBoard;
     this.notes = {};
+
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
         this.notes[`${i}|${j}`] = [];
       }
     }
+
     this.moves = [];
 
     await this.save();
   }
 
+  /**
+   * Undoes that most recent action.
+   */
   async undo() {
     if (this.moves.length > 0) {
-      const lMove = this.moves.pop();
+      const lastMove = this.moves.pop();
 
       // revert square
-      this.#setCell(lMove.firmId, lMove.oldVal);
+      this.#setCell(lastMove.firmId, lastMove.oldVal);
 
       // revert any changed notes
-      const cNotes = Object.entries(lMove.cNotes);
-      for (const cNote of cNotes) {
-        for (const note of cNote[1]) {
-          this.#setNote(cNote[0], note.toString());
+      const currentNotes = Object.entries(lastMove.currentNotes);
+      for (const currentNote of currentNotes) {
+        for (const note of currentNote[1]) {
+          this.#setNote(currentNote[0], note.toString());
         }
       }
 
@@ -629,11 +735,14 @@ export class Solver {
 
   }
 
+  /**
+   * Saves the solver state to indexDB.
+   */
   async save() {
-    await set(`iBoard-${this.curDif}`, this.iBoard);
-    await set(`cBoard-${this.curDif}`, this.cBoard);
-    await set(`sBoard-${this.curDif}`, this.sBoard);
-    await set(`moves-${this.curDif}`, JSON.stringify(this.moves));
-    await set(`notes-${this.curDif}`, JSON.stringify(this.notes));
+    await set(`initialBoard-${this.currentDifficulty}`, this.initialBoard);
+    await set(`currentBoard-${this.currentDifficulty}`, this.currentBoard);
+    await set(`solvedBoard-${this.currentDifficulty}`, this.solvedBoard);
+    await set(`moves-${this.currentDifficulty}`, JSON.stringify(this.moves));
+    await set(`notes-${this.currentDifficulty}`, JSON.stringify(this.notes));
   }
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import HorizontalCellDivider from "../dividers/HorizontalCellDivider.svelte";
   import SubCell from "./SubCell.svelte";
 
   export let cellId: number;
@@ -7,33 +8,25 @@
 <div class="cell">
   <div class="row">
     <SubCell {cellId} subId={0} />
-    <div class="div-seg-h" />
+    <div class="vertical-cell-divider" />
     <SubCell {cellId} subId={1} />
-    <div class="div-seg-h" />
+    <div class="vertical-cell-divider" />
     <SubCell {cellId} subId={2} />
   </div>
-  <div class="div-row">
-    <div class="div-seg" />
-    <div class="div-seg" />
-    <div class="div-seg" />
-  </div>
+  <HorizontalCellDivider />
   <div class="row">
     <SubCell {cellId} subId={3} />
-    <div class="div-seg-h" />
+    <div class="vertical-cell-divider" />
     <SubCell {cellId} subId={4} />
-    <div class="div-seg-h" />
+    <div class="vertical-cell-divider" />
     <SubCell {cellId} subId={5} />
   </div>
-  <div class="div-row">
-    <div class="div-seg" />
-    <div class="div-seg" />
-    <div class="div-seg" />
-  </div>
+  <HorizontalCellDivider />
   <div class="row">
     <SubCell {cellId} subId={6} />
-    <div class="div-seg-h" />
+    <div class="vertical-cell-divider" />
     <SubCell {cellId} subId={7} />
-    <div class="div-seg-h" />
+    <div class="vertical-cell-divider" />
     <SubCell {cellId} subId={8} />
   </div>
 </div>
@@ -48,23 +41,7 @@
     align-items: center;
   }
 
-  .div-row {
-    width: 100%;
-
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .div-seg {
-    background-color: var(--foreground);
-    height: 2px;
-
-    width: 25%;
-
-    border-radius: 50px;
-  }
-
-  .div-seg-h {
+  .vertical-cell-divider {
     background-color: var(--foreground);
     height: 75%;
 

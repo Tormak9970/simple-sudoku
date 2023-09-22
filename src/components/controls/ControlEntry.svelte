@@ -22,7 +22,7 @@
     justify-content: center;
 
     border-radius: 50px;
-    border: 1px solid var(--highlight);
+    background-color: var(--foreground);
 
     width: 60px;
     height: 18px;
@@ -34,11 +34,15 @@
   }
 
   .control-entry:hover {
-    background-color: var(--foreground);
+    background-color: var(--foreground-hover);
     cursor: pointer;
   }
 
   .toggled {
+    background-color: var(--highlight);
+  }
+
+  .toggled:hover {
     background-color: var(--highlight);
   }
 </style>

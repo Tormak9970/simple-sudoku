@@ -63,8 +63,7 @@
 
 <style>
   .header {
-    position: absolute;
-    top: calc((100vw - min(60vh, 90vw)) / 2 - 10px);
+    margin-top: calc((100vw - min(60vh, 90vw)) / 2 - 10px);
     width: min(60vh, 90vw);
     height: 34px;
 

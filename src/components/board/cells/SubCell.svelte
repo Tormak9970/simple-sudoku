@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "idb-keyval";
-  import { calcTotalTime } from "../../lib/Utils";
+  import { calcTotalTime } from "../../../lib/Utils";
 
   import { afterUpdate } from "svelte";
 
@@ -18,7 +18,7 @@
     bestTime,
     timer,
     curIsBest,
-  } from "../../stores";
+  } from "../../../stores";
 
   export let cellId: number;
   export let subId: number;
@@ -30,14 +30,14 @@
   let notesList: string[] = [];
 
   function getValue() {
-    if ($solver.cBoard) {
+    if ($solver.currentBoard) {
       const data = $solver.getCell(firmId);
       value = data.value;
       editable = data.editable;
     }
   }
   function getNotes() {
-    if ($solver.cBoard) {
+    if ($solver.currentBoard) {
       const data = $solver.getNote(firmId);
       notesList = data;
     }
@@ -46,9 +46,9 @@
   afterUpdate(async () => {
     getValue();
     if (editable) getNotes();
-    if ($solver.cBoard == $solver.sBoard) {
+    if ($solver.currentBoard == $solver.solvedBoard) {
       $isPaused = true;
-      const bTime = await get(`bestTime-${$solver.curDif}`);
+      const bTime = await get(`bestTime-${$solver.currentDifficulty}`);
       $bestTime = bTime;
       if (bTime) {
         if (calcTotalTime(bTime) > calcTotalTime($timer)) {
@@ -110,15 +110,9 @@
 <div
   class="sub-cell"
   class:clue={!editable}
-  class:ghost-selected={(($selectedNumber == value ||
-    $ctrlNumSelected == value ||
-    notesList.includes($selectedNumber?.toString())) &&
-    (!$ctrlNumSelected || $ctrlNumSelected == value)) ||
-    notesList.includes($ctrlNumSelected?.toString()) ||
-    ($selectedSubCellId == firmId && !editable)}
-  class:selected={$selectedSubCellId == firmId &&
-    editable &&
-    $initialSelect == "cell"}
+  class:ghost-selected={(($selectedNumber == value || $ctrlNumSelected == value || notesList.includes($selectedNumber?.toString())) &&
+    (!$ctrlNumSelected || $ctrlNumSelected == value)) || notesList.includes($ctrlNumSelected?.toString()) || ($selectedSubCellId == firmId && !editable)}
+  class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"}
   class:error={$errorsList.includes(firmId)}
   on:click={click}
 >
@@ -139,8 +133,9 @@
 
 <style>
   .sub-cell {
-    width: calc((100% - 4px) / 3);
-    height: 100%;
+    width: calc((100% - 4px - 12px) / 3);
+    height: calc(100% - 4px);
+    margin: 2px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -175,29 +170,23 @@
   }
 
   .sub-cell:hover {
-    background-color: var(--hover);
+    background-color: var(--foreground-hover);
     cursor: pointer;
   }
   .clue {
     background-color: var(--foreground);
   }
 
-  .ghost-selected {
+  .ghost-selected,
+  .clue.ghost-selected:hover {
     background-color: var(--highlight-accent);
   }
-  .selected {
-    background-color: var(--highlight);
-  }
-  .selected:hover {
-    background-color: var(--highlight-hover);
-  }
 
-  .error {
-    background-color: var(--warning);
-  }
-  .error:hover {
-    background-color: var(--warning-hover);
-  }
+  .selected { background-color: var(--highlight); }
+  .selected:hover { background-color: var(--highlight-hover); }
+
+  .error { background-color: var(--warning); }
+  .error:hover,
   .error.selected {
     background-color: var(--warning-hover);
   }

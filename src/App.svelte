@@ -14,8 +14,9 @@
   <Header />
   {#if showMenu}
     <!-- <StartScreen /> -->
+    <Game newGame={$newGame} />
   {:else}
-    <Game difficulty={$selectedDifficulty} newGame={$newGame} />
+    <Game newGame={$newGame} />
   {/if}
 </main>
 
@@ -26,7 +27,6 @@
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 
     background-color: var(--background);

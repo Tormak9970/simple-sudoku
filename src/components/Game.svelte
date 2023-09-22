@@ -6,7 +6,6 @@
   import Board from "./board/Board.svelte";
   import Controls from "./controls/Controls.svelte";
   import VictoryModal from "./modals/VictoryModal.svelte";
-  import Numbers from "./numbers/Numbers.svelte";
 
   export let newGame: boolean = false;
 
@@ -23,17 +22,18 @@
   }
 </script>
 
-<div id="game">
+<div class="game-container">
   {#await load() then _}
     <Board />
-    <Numbers />
     <Controls />
   {/await}
   <VictoryModal />
 </div>
 
 <style>
-  #game {
+  .game-container {
+    margin-top: calc((100vw - min(60vh, 90vw)) / 2 - 10px);
+
     width: 100%;
 
     display: flex;

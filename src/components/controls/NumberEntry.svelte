@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { afterUpdate } from "svelte";
-
   import {
     ctrlNumSelected,
     errorsList,
@@ -56,11 +54,7 @@
     }
   }
 
-  let numLeft = 9 - ($solver.cBoard.split(`${control}`).length - 1);
-
-  afterUpdate(() => {
-    numLeft = 9 - ($solver.cBoard.split(`${control}`).length - 1);
-  });
+  $: numLeft = 9 - ($solver.currentBoard.split(`${control}`).length - 1);
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -81,7 +75,7 @@
     justify-content: center;
 
     border-radius: 50px;
-    border: 1px solid var(--highlight);
+   background-color: var(--foreground);
 
     width: 35px;
     height: 35px;
@@ -96,7 +90,7 @@
 
   .number:hover {
     cursor: pointer;
-    background-color: var(--foreground);
+    background-color: var(--foreground-hover);
   }
 
   .inner {
@@ -111,6 +105,9 @@
   }
 
   .selected {
+    background-color: var(--highlight);
+  }
+  .selected:hover {
     background-color: var(--highlight);
   }
 </style>

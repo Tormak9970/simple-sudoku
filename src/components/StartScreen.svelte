@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { get, set } from "idb-keyval";
-  import { afterUpdate } from "svelte";
+  // import { get, set } from "idb-keyval";
+  // import { afterUpdate } from "svelte";
 
   import { newGame, showMenu, selectedDifficulty, theme } from "../stores";
   import DiffSelector from "./menu/DiffSelector.svelte";
@@ -10,28 +10,28 @@
   let existingDiffs = [];
   let bestTimes = {};
 
-  async function load() {
-    // get saved theme or save default
-    if (await get("theme")) {
-      $theme = await get("theme");
-    } else {
-      await set("theme", $theme);
-    }
-    document.documentElement.setAttribute("data-theme", $theme);
+  // async function load() {
+  //   // get saved theme or save default
+  //   if (await get("theme")) {
+  //     $theme = await get("theme");
+  //   } else {
+  //     await set("theme", $theme);
+  //   }
+  //   document.documentElement.setAttribute("data-theme", $theme);
 
-    // get saved difficulty or save default
-    if (await get("difficulty")) {
-      $selectedDifficulty = await get("difficulty");
-    } else {
-      await set("difficulty", $selectedDifficulty);
-    }
+  //   // get saved difficulty or save default
+  //   if (await get("difficulty")) {
+  //     $selectedDifficulty = await get("difficulty");
+  //   } else {
+  //     await set("difficulty", $selectedDifficulty);
+  //   }
 
-    // check existing saves
-    for (const diff of difficulties) {
-      const exts = await get(`iBoard-${diff}`);
-      if (exts) existingDiffs.push(diff);
-    }
-  }
+  //   // check existing saves
+  //   for (const diff of difficulties) {
+  //     const exts = await get(`iBoard-${diff}`);
+  //     if (exts) existingDiffs.push(diff);
+  //   }
+  // }
 
   function resumeHandler(e: Event) {
     $newGame = false;
@@ -45,17 +45,17 @@
   let hasSave = existingDiffs.includes($selectedDifficulty);
   let bestTime = null;
 
-  afterUpdate(async () => {
-    // check existing saves
-    existingDiffs = [];
-    for (const diff of difficulties.map((d) => d.toLowerCase())) {
-      const exts = await get(`iBoard-${diff}`);
-      if (exts) existingDiffs.push(diff);
-    }
-    hasSave = existingDiffs.includes($selectedDifficulty);
+  // afterUpdate(async () => {
+  //   // check existing saves
+  //   existingDiffs = [];
+  //   for (const diff of difficulties.map((d) => d.toLowerCase())) {
+  //     const exts = await get(`iBoard-${diff}`);
+  //     if (exts) existingDiffs.push(diff);
+  //   }
+  //   hasSave = existingDiffs.includes($selectedDifficulty);
 
-    bestTime = await get(`bestTime-${$selectedDifficulty}`);
-  });
+  //   bestTime = await get(`bestTime-${$selectedDifficulty}`);
+  // });
 </script>
 
 <div id="startScreen">
