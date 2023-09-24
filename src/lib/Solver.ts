@@ -1,6 +1,7 @@
 import { get, set } from 'idb-keyval';
 import { arrayDiff, chunk, idToIdx, idxToId } from './Utils';
 import { board, moves, notes } from "../stores";
+import { LogController } from "./LogController";
 
 /**
  * Calculates the "cross product" of two vectors.
@@ -22,12 +23,12 @@ const DIGITS: string = '123456789';
 const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 const COLUMNS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-const squares = cross(ROWS, COLUMNS);
-const UNITS_LIST = [];
+const SQUARES = cross(ROWS, COLUMNS);
+const UNITS_LIST: string[][] = [];
 for (let column of COLUMNS) {
   UNITS_LIST.push(cross(ROWS, [column]));
 }
-for (let row in ROWS) {
+for (let row of ROWS) {
   UNITS_LIST.push(cross([row], COLUMNS));
 }
 
@@ -47,27 +48,39 @@ for (const row of ROW_MATRIX) {
   }
 }
 
+type Units = {
+  [square: string]: [
+    string[], //* Column this unit is in.
+    string[], //* Row this unit is in.
+    string[] //* Cell this unit is in
+  ]
+}
+
 const UNITS = {};
-for (let square of squares) {
+for (const square of SQUARES) {
   UNITS[square] = [];
 
-  for (let unit in UNITS_LIST) {
+  for (const unit of UNITS_LIST) {
     if (unit.includes(square)) {
       UNITS[square].push(unit);
     }
   }
 }
 
-const PEERS = {};
-for (const squareIndex in squares) {
-  PEERS[squareIndex] = {};
+type Peers = {
+  [square: string]: string[]
+}
 
-  for (const unitIndex in UNITS[squareIndex]) {
-    let unitList = UNITS[squareIndex][unitIndex];
+const PEERS: Peers = {};
+for (const square of SQUARES) {
+  PEERS[square] = [];
 
-    for (const secondSquareIndex in unitList) {
-      if (unitList[secondSquareIndex] !== secondSquareIndex) {
-        PEERS[squareIndex][unitList[secondSquareIndex]] = true;
+  for (const unitIndex in UNITS[square]) {
+    let unitList = UNITS[square][unitIndex];
+
+    for (const squareInUnit of unitList) {
+      if (squareInUnit !== square) {
+        PEERS[square].push(squareInUnit);
       }
     }
   }
@@ -135,7 +148,7 @@ function center(s: string | any[], w: number) {
 export function display(values: { [x: string]: any; }): string {
   let width = 0;
 
-  for (const square of squares) {
+  for (const square of SQUARES) {
     if (values[square].length > width) width = values[square].length;
   }
 
@@ -261,22 +274,23 @@ export class Solver {
      * Note the resulting puzzle is not guaranteed to be solvable, but empirically
      * about 99.8% of them are solvable. Some have multiple solutions.
      */
-    const values = Object.assign({}, ...squares.map((square) => {
+    const values = Object.assign({}, ...SQUARES.map((square) => {
       let res = {};
       res[square] = DIGITS;
       return res;
     }));
 
-    for (const square of shuffle(squares)) {
-      if (!this.#assign(values, square, values[square][Math.floor(Math.random() * values[square].length)])) break;
+    for (const square of shuffle(SQUARES)) {
+      const assignedValues = this.#assign(values, square, values[square][Math.floor(Math.random() * values[square].length)]);
+      if (!assignedValues) break;
 
       const singleOptions = [];
-      for (const square of squares) {
+      for (const square of SQUARES) {
         if (values[square].length === 1) singleOptions.push(values[square])
       }
 
       if (singleOptions.length >= numberOfHints && (new Set(singleOptions)).size >= 8) {
-        const res = squares.map((square) => {
+        const res = SQUARES.map((square) => {
           return (values[square].length === 1) ? values[square] : '.';
         }).join('');
 
@@ -375,9 +389,9 @@ export class Solver {
     let result = true;
     let squareValues = values[square];
 
-    for (let i = 0; i < squareValues.length; i++) {
-      if (squareValues.charAt(i) !== digit) {
-        result = result && !!this.#eliminate(values, square, squareValues.charAt(i));
+    for (const squareValue of squareValues.split("")) {
+      if (squareValue !== digit) {
+        result = result && this.#eliminate(values, square, squareValue);
       }
     }
 
@@ -386,18 +400,21 @@ export class Solver {
 
   #eliminate(values: { [x: string]: string; }, square: string, digit: string) {
     if (!values[square].includes(digit)) {
-      return values; // already eliminated.
+      return true; // already eliminated.
     }
 
     values[square] = values[square].replace(digit, "");
 
-    if (values[square].length == 0) {
-      return false; // invalid input ?
-    } else if (values[square].length == 1) { // If there is only one value (values[sq]) left in square, remove it from peers
+    if (values[square].length === 0) {
+      // LogController.error("Expected square", square, "to have at least one value but had 0!");
+      return false;
+    } else if (values[square].length === 1) {
+      //* If there is only one value (values[sq]) left in square, remove it from peers
       let result = true;
 
       for (const peer of PEERS[square]) {
-        result = result && !!this.#eliminate(values, peer, values[square]);
+        // TODO: this aint workin
+        result = result && this.#eliminate(values, peer, values[square]);
       }
 
       if (!result) return false;
@@ -423,14 +440,14 @@ export class Solver {
       }
     }
 
-    return values;
+    return true;
   }
 
   search(values: { [x: string]: string; }) {
     if (!values) return null;
 
     let min = 10, max = 1, targetSquare = null;
-    for (let square of squares) {
+    for (let square of SQUARES) {
       if (values[square].length > max) max = values[square].length;
 
       if (values[square].length > 1 && values[square].length < min) {
@@ -467,11 +484,11 @@ export class Solver {
     }
 
     let values = {};
-    for (let square of squares) {
+    for (let square of SQUARES) {
       values[square] = DIGITS;
     }
-    for (let squareIndex in squares) {
-      if (DIGITS.indexOf(board2.charAt(parseInt(squareIndex))) >= 0 && !this.#assign(values, squares[squareIndex], board2.charAt(parseInt(squareIndex)))) return false;
+    for (let squareIndex in SQUARES) {
+      if (DIGITS.indexOf(board2.charAt(parseInt(squareIndex))) >= 0 && !this.#assign(values, SQUARES[squareIndex], board2.charAt(parseInt(squareIndex)))) return false;
     }
 
     return values;
@@ -707,7 +724,7 @@ export class Solver {
     if (this.getCell(firmId).editable) {
       return this.notes[firmId];
     } else {
-      return null;
+      return [];
     }
   }
 

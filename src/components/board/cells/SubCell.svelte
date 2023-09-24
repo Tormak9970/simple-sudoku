@@ -19,7 +19,7 @@
     curIsBest,
     board,
   } from "../../../stores";
-    import { Unsubscriber } from "svelte/store";
+  import type { Unsubscriber } from "svelte/store";
 
   export let cellId: number;
   export let subId: number;
@@ -82,19 +82,21 @@
     }
   }
 
-  afterUpdate(async () => {
-    if ($board === $solver.solvedBoard) {
-      $isPaused = true;
-      $bestTime = await get(`bestTime-${$solver.currentDifficulty}`);
+  async function userWon() {
+    $isPaused = true;
+    $bestTime = await get(`bestTime-${$solver.currentDifficulty}`);
 
-      if ($bestTime) {
-        if (calcTotalTime($bestTime) > calcTotalTime($timer)) {
-          $curIsBest = true;
-        }
+    if ($bestTime) {
+      if (calcTotalTime($bestTime) > calcTotalTime($timer)) {
+        $curIsBest = true;
       }
-
-      $showVictory = true;
     }
+
+    $showVictory = true;
+  }
+
+  afterUpdate(() => {
+    if ($board === $solver.solvedBoard) userWon();
   });
 
   onMount(() => {
@@ -112,13 +114,13 @@
 <div
   class="sub-cell"
   class:clue={!editable}
-  class:ghost-selected={(($selectedNumber == value || $ctrlNumSelected == value || notesList.includes($selectedNumber?.toString())) &&
-    (!$ctrlNumSelected || $ctrlNumSelected == value)) || notesList.includes($ctrlNumSelected?.toString()) || ($selectedSubCellId == firmId && !editable)}
-  class:selected={$selectedSubCellId == firmId && editable && $initialSelect == "cell"}
+  class:ghost-selected={(($selectedNumber === value || $ctrlNumSelected === value || notesList.includes($selectedNumber?.toString())) &&
+    (!$ctrlNumSelected || $ctrlNumSelected === value)) || notesList.includes($ctrlNumSelected?.toString()) || ($selectedSubCellId === firmId && !editable)}
+  class:selected={$selectedSubCellId === firmId && editable && $initialSelect === "cell"}
   class:error={$errorsList.includes(firmId)}
   on:click={click}
 >
-  {#if value == ""}
+  {#if value === ""}
     <div class="notes-cont">
       {#each notesList as note}
         <div class="note">
