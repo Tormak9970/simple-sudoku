@@ -18,6 +18,7 @@
     timer,
     curIsBest,
     board,
+    notes,
   } from "../../../stores";
   import type { Unsubscriber } from "svelte/store";
 
@@ -25,12 +26,13 @@
   export let subId: number;
 
   let boardUnsub: Unsubscriber;
+  let notesUnsub: Unsubscriber;
 
   const firmId = `${cellId}|${subId}`;
 
   let editable = true; // set true if board is '.' here
   let value = "";
-  $: notesList = editable && $board ? $solver.getNote(firmId) : [];
+  let notesList = [];
 
   function getValue() {
     if ($solver.currentBoard) {
@@ -60,7 +62,7 @@
 
       if ($inNoteMode) {
         await $solver.setNote(firmId, $ctrlNumSelected.toString());
-        if ($solver.getNote(firmId).includes($ctrlNumSelected)) {
+        if (notesList.includes($ctrlNumSelected)) {
           $selectedNumber = $ctrlNumSelected;
         } else {
           $selectedNumber = null;
@@ -103,10 +105,14 @@
     boardUnsub = board.subscribe(() => {
       getValue();
     });
+    notesUnsub = notes.subscribe((newNotes) => {
+      notesList = editable ? newNotes[firmId] : [];
+    });
   });
 
   onDestroy(() => {
     if (boardUnsub) boardUnsub();
+    if (notesUnsub) notesUnsub();
   });
 </script>
 

@@ -689,6 +689,7 @@ export class Solver {
       }
     }
 
+    this.notes = {...this.notes};
     return oldNotes;
   }
 

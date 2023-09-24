@@ -27,6 +27,7 @@
       if (cellVal.editable) {
         if ($inNoteMode) {
           await $solver.setNote($selectedSubCellId, control.toString());
+          
           if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
             $selectedNumber = control;
           } else {
