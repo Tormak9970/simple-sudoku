@@ -1,0 +1,30 @@
+:root {
+  --bounce-effect: bounce 0.6s ease-in-out;
+}
+
+@keyframes bounce {
+  0% {
+		transform: scale(1);
+	}
+	16% {
+		transform: scale(0.68);
+	}
+	28% {
+		transform: scale(1.13);
+	}
+	44% {
+		transform: scale(0.95);
+	}
+	59% {
+		transform: scale(1.02);
+	}
+	73% {
+		transform: scale(0.99);
+	}
+	88% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(1);
+  }
+}

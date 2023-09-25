@@ -30,5 +30,7 @@
     align-items: center;
 
     background-color: var(--background);
+
+    user-select: none;
   }
 </style>

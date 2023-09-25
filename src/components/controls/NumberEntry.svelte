@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte";
   import {
     board,
     ctrlNumSelected,
@@ -9,6 +10,12 @@
     selectedSubCellId,
     solver,
   } from "../../stores";
+  import { bounceIn } from "svelte/easing"
+  import { tweened } from 'svelte/motion';
+  import type { Unsubscriber } from "svelte/store";
+
+  let controlNumSelectedUnsub: Unsubscriber;
+  let initialSelectUnsub: Unsubscriber;
 
   export let control: number;
 
@@ -27,7 +34,7 @@
       if (cellVal.editable) {
         if ($inNoteMode) {
           await $solver.setNote($selectedSubCellId, control.toString());
-          
+
           if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
             $selectedNumber = control;
           } else {
@@ -51,13 +58,40 @@
     }
   }
 
+  const scale = tweened(1.0, { duration: 200, easing: bounceIn });
+
   $: numLeft = 9 - ($board.split(`${control}`).length - 1);
+  $: selected = $ctrlNumSelected === control && $initialSelect === "ctrl";
+
+  onMount(() => {
+    // controlNumSelectedUnsub = ctrlNumSelected.subscribe((selectedControl) => {
+    //   if (selectedControl === control && $initialSelect === "ctrl") {
+    //     scale.set(1.05);
+    //   } else {
+    //     scale.set(1.0);
+    //   }
+    // });
+
+    // initialSelectUnsub = initialSelect.subscribe((initial) => {
+    //   if ($ctrlNumSelected === control && initial === "ctrl") {
+    //     scale.set(1.05);
+    //   } else {
+    //     scale.set(1.0);
+    //   }
+    // });
+  });
+
+  onDestroy(() => {
+    if (controlNumSelectedUnsub) controlNumSelectedUnsub();
+    if (initialSelectUnsub) initialSelectUnsub();
+  });
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   class="number"
-  class:selected={$ctrlNumSelected == control && $initialSelect == "ctrl"}
+  class:selected={selected}
+  style="transform: scale({$scale})"
   on:click={click}
 >
   <div class="inner">{control}</div>
@@ -72,7 +106,7 @@
     justify-content: center;
 
     border-radius: 50px;
-   background-color: var(--foreground);
+    background-color: var(--foreground);
 
     width: 35px;
     height: 35px;
