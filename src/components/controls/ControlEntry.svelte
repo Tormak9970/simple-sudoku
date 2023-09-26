@@ -1,7 +1,7 @@
 <script lang="ts">
   import { inNoteMode } from "../../stores";
 
-  export let handler: Function;
+  export let handler: (e: Event) => void;
   export let isNoteToggle = false;
 
   function click(e: Event) {
