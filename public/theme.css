@@ -1,125 +1,41 @@
 :root {
-  --font-color: rgb(231, 231, 231);
-  --background: #1a1a1a;
-  --foreground: #252525;
-  --foreground-hover: #303030;
+  --font-color: #e7e7e7;
+  --background: #010101;
+  --background-hover: #090909;
+  --foreground: #1a1a1a;
+  --foreground-hover: #222222;
 
-  --highlight: #82b74b;
-  --highlight-hover: #8ac24e;
-  --highlight-accent: #405d27ff;
-  --highlight-accent__2: #32481eff;
+  --highlight: #ff3d03;
+  --highlight-hover: #ff1403;
+  --highlight-accent: #441b15;
+  --highlight-accent-hover: #582118;
+
   --warning: #e24a4a;
   --warning-hover: #e13525;
 }
 
-/* Light Themes */
 [data-theme="light"] {
-  --font-color: rgb(20, 20, 20);
-  --background: #FCF8E8;
-  --foreground: #e9d7b6;
-  --hover: #e6c895;
+  --font-color: #141414;
+  --background: #fcebe8;
+  --background-hover: #e9d3cf;
+  --foreground: #e4d4cc;
+  --foreground-hover: #ceb8ad;
 
-  --highlight: #e38a53;
-  --highlight-hover: #e17938;
-  --highlight-accent: #d8573a;
+  --highlight: #ff3d03;
+  --highlight-hover: #ff1403;
+  --highlight-accent: #441b15;
+  --highlight-accent-hover: #582118;
 }
 
-[data-theme="earth"] {
-  --font-color: rgb(20, 20, 20);
-  --background: #FAFDD6;
-  --foreground: #E4E9BE;
-  --hover: #b4bc7d;
-
-  --highlight: #A2B38B;
-  --highlight-hover: #8da36e;
-  --highlight-accent: #eab1d8;
-}
-
-[data-theme="sea"] {
-  --font-color: rgb(20, 20, 20);
-  --background: #EFFFFD;
-  --foreground: #c8f3fa;
-  --hover: #add1d7;
-
-  --highlight: #4addea;
-  --highlight-hover: #46d5e2;
-  --highlight-accent: #42C2FF;
-}
-
-[data-theme="grass"] {
-  --font-color: rgb(20, 20, 20);
-  --background: #F4EEA9;
-  --foreground: #F0BB62;
-  --hover: #d4a149;
-
-  --highlight: #519259;
-  --highlight-hover: #3c7c44;
-  --highlight-accent: #0cbd0c;
-}
-
-[data-theme="peace"] {
-  --font-color: rgb(20, 20, 20);
-  --background: #D5BFBF;
-  --foreground: #d09393;
-  --hover: #b66b6b;
-
-  --highlight: #6D8299;
-  --highlight-hover: #4f6d8e;
-  --highlight-accent: #316B83;
-}
-
-/* Dark Themes */
 [data-theme="dark"] {
-  --font-color: rgb(231, 231, 231);
-  --background: #1a1a1a;
-  --foreground: #252525;
-  --hover: #414141;
+  --font-color: #e7e7e7;
+  --background: #010101;
+  --background-hover: #090909;
+  --foreground: #1a1a1a;
+  --foreground-hover: #222222;
 
-  --highlight: #82b74b;
-  --highlight-hover: #8ac24e;
-  --highlight-accent: #405d27ff;
-}
-
-[data-theme="sunset"] {
-  --font-color: rgb(231, 231, 231);
-  --background: #511845;
-  --foreground: #900C3F;
-  --hover: #a9164e;
-
-  --highlight: #C70039;
-  --highlight-hover: #d41249;
-  --highlight-accent: #FF5733;
-}
-
-[data-theme="pop"] {
-  --font-color: rgb(231, 231, 231);
-  --background: #251D3A;
-  --foreground: #2A2550;
-  --hover: #382f7f;
-
-  --highlight: #E04D01;
-  --highlight-hover: #e03711;
-  --highlight-accent: #FF7700;
-}
-
-[data-theme="space"] {
-  --font-color: rgb(231, 231, 231);
-  --background: #180A0A;
-  --foreground: #711A75;
-  --hover: #9d19a4;
-
-  --highlight: #F10086;
-  --highlight-hover: #eb136a;
-  --highlight-accent: #cd5178;
-}
-
-[data-theme="magma"] {
-  --font-color: rgb(231, 231, 231);
-  --background: #000000;
-  --foreground: #3D0000;
-  --hover: #5d0404;
-
-  --highlight: #950101;
-  --highlight-hover: #b30808;
-  --highlight-accent: #FF0000;
+  --highlight: #ff3d03;
+  --highlight-hover: #ff1403;
+  --highlight-accent: #441b15;
+  --highlight-accent-hover: #582118;
 }

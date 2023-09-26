@@ -14,7 +14,7 @@
     timer,
     selectedDifficulty,
   } from "../../stores";
-    import ThemeController from "./ThemeController.svelte";
+  import ThemeToggle from "./ThemeToggle.svelte";
   
   async function back(e: Event) {
     await $solver.save();
@@ -57,7 +57,7 @@
   {/if}
 
   <div class="theme-cont">
-    <ThemeController />
+    <ThemeToggle />
   </div>
 </div>
 
