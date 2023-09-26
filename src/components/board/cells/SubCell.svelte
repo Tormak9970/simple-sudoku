@@ -8,15 +8,15 @@
     selectedSubCellId,
     selectedNumber,
     solver,
-    ctrlNumSelected,
+    selectedControlNumber,
     inNoteMode,
-    initialSelect,
+    firstSelected,
     errorsList,
     showVictory,
     isPaused,
     bestTime,
     timer,
-    curIsBest,
+    currentTimeIsBest,
     board,
     notes,
   } from "../../../stores";
@@ -43,9 +43,9 @@
   }
 
   async function click() {
-    if (!$initialSelect) $initialSelect = "cell";
+    if (!$firstSelected) $firstSelected = "cell";
 
-    if ($initialSelect === "cell") {
+    if ($firstSelected === "cell") {
       if ($selectedSubCellId == firmId) {
         $selectedSubCellId = null;
         $selectedNumber = null;
@@ -55,31 +55,31 @@
       }
     }
 
-    if ($ctrlNumSelected && editable) {
+    if ($selectedControlNumber && editable) {
       if ($errorsList.includes(firmId))
         $errorsList.splice($errorsList.indexOf(firmId), 1);
       $errorsList = [...$errorsList];
 
       if ($inNoteMode) {
-        await $solver.setNote(firmId, $ctrlNumSelected.toString());
-        if (notesList.includes($ctrlNumSelected)) {
-          $selectedNumber = $ctrlNumSelected;
+        await $solver.setNote(firmId, $selectedControlNumber.toString());
+        if (notesList.includes($selectedControlNumber)) {
+          $selectedNumber = $selectedControlNumber;
         } else {
           $selectedNumber = null;
         }
       } else {
-        if (value != $ctrlNumSelected) {
-          await $solver.setCell(firmId, $ctrlNumSelected.toString());
-          $selectedNumber = $ctrlNumSelected;
-        } else if ($initialSelect === "ctrl") {
+        if (value !== $selectedControlNumber) {
+          await $solver.setCell(firmId, $selectedControlNumber.toString());
+          $selectedNumber = $selectedControlNumber;
+        } else if ($firstSelected === "ctrl") {
           await $solver.setCell(firmId, ".");
           $selectedNumber = null;
         }
       }
     }
 
-    if (!$ctrlNumSelected && !$selectedSubCellId) {
-      $initialSelect = null;
+    if (!$selectedControlNumber && !$selectedSubCellId) {
+      $firstSelected = null;
       $selectedNumber = null;
     }
   }
@@ -90,7 +90,7 @@
 
     if ($bestTime) {
       if (calcTotalTime($bestTime) > calcTotalTime($timer)) {
-        $curIsBest = true;
+        $currentTimeIsBest = true;
       }
     }
 
@@ -120,9 +120,15 @@
 <div
   class="sub-cell"
   class:clue={!editable}
-  class:ghost-selected={(($selectedNumber === value || $ctrlNumSelected === value || notesList.includes($selectedNumber?.toString())) &&
-    (!$ctrlNumSelected || $ctrlNumSelected === value)) || notesList.includes($ctrlNumSelected?.toString()) || ($selectedSubCellId === firmId && !editable)}
-  class:selected={$selectedSubCellId === firmId && editable && $initialSelect === "cell"}
+  class:ghost-selected={
+    (
+      ($selectedNumber === value || $selectedControlNumber === value || notesList.includes($selectedNumber?.toString())) &&
+      (!$selectedControlNumber || $selectedControlNumber === value)
+    ) ||
+    notesList.includes($selectedControlNumber?.toString()) ||
+    ($selectedSubCellId === firmId && !editable)
+  }
+  class:selected={$selectedSubCellId === firmId && editable && $firstSelected === "cell"}
   class:error={$errorsList.includes(firmId)}
   on:click={click}
 >

@@ -2,9 +2,9 @@
   import { onDestroy, onMount } from "svelte";
   import {
     board,
-    ctrlNumSelected,
+    selectedControlNumber,
     errorsList,
-    initialSelect,
+    firstSelected,
     inNoteMode,
     selectedNumber,
     selectedSubCellId,
@@ -20,10 +20,10 @@
   export let control: number;
 
   async function click() {
-    if (!$initialSelect) $initialSelect = "ctrl";
+    if (!$firstSelected) $firstSelected = "ctrl";
 
-    if ($initialSelect === "ctrl") {
-      $ctrlNumSelected = $ctrlNumSelected === control ? null : control;
+    if ($firstSelected === "ctrl") {
+      $selectedControlNumber = $selectedControlNumber === control ? null : control;
     }
 
     if ($selectedSubCellId) {
@@ -44,7 +44,7 @@
           if (cellVal.value !== control.toString()) {
             await $solver.setCell($selectedSubCellId, control.toString());
             $selectedNumber = control;
-          } else if ($initialSelect === "cell") {
+          } else if ($firstSelected === "cell") {
             await $solver.setCell($selectedSubCellId, ".");
             $selectedNumber = null;
           }
@@ -52,8 +52,8 @@
       }
     }
 
-    if (!$ctrlNumSelected && !$selectedSubCellId) {
-      $initialSelect = null;
+    if (!$selectedControlNumber && !$selectedSubCellId) {
+      $firstSelected = null;
       $selectedNumber = null;
     }
   }
@@ -61,7 +61,7 @@
   const scale = tweened(1.0, { duration: 200, easing: bounceIn });
 
   $: numLeft = 9 - ($board.split(`${control}`).length - 1);
-  $: selected = $ctrlNumSelected === control && $initialSelect === "ctrl";
+  $: selected = $selectedControlNumber === control && $firstSelected === "ctrl";
 
   onMount(() => {
     // controlNumSelectedUnsub = ctrlNumSelected.subscribe((selectedControl) => {

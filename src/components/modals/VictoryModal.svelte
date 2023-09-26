@@ -7,14 +7,14 @@
     timer,
     solver,
     bestTime,
-    curIsBest,
+    currentTimeIsBest,
     showMenu,
     showRestart,
     selectedNumber,
     selectedSubCellId,
     inNoteMode,
-    initialSelect,
-    ctrlNumSelected,
+    firstSelected,
+    selectedControlNumber,
     errorsList,
   } from "../../stores";
 
@@ -30,7 +30,7 @@
     await del(`timer-${diff}`);
 
     if ($bestTime) {
-      if ($curIsBest) await set(`bestTime-${diff}`, $timer);
+      if ($currentTimeIsBest) await set(`bestTime-${diff}`, $timer);
     } else {
       await set(`bestTime-${diff}`, $timer);
     }
@@ -39,7 +39,7 @@
     $showVictory = false;
     $isPaused = false;
     $bestTime = null;
-    $curIsBest = false;
+    $currentTimeIsBest = false;
 
     // reset other values
     $timer = "00:00:00";
@@ -48,8 +48,8 @@
     $selectedNumber = null;
     $selectedSubCellId = null;
     $inNoteMode = false;
-    $initialSelect = null;
-    $ctrlNumSelected = null;
+    $firstSelected = null;
+    $selectedControlNumber = null;
     $errorsList = [];
     $showMenu = true;
   }
@@ -65,7 +65,7 @@
           Difficulty: {capitalizeFirstLetter($solver.currentDifficulty)}
         </div>
         {#if $bestTime}
-          {#if $curIsBest}
+          {#if $currentTimeIsBest}
             <div style="font-size: 14px;">New Best: {$timer}</div>
             <div style="font-size: 14px;">Old Best: {$bestTime}</div>
           {:else}

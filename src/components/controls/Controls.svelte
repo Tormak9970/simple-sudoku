@@ -1,8 +1,8 @@
 <script lang="ts">
   import {
-    ctrlNumSelected,
+    selectedControlNumber,
     errorsList,
-    initialSelect,
+    firstSelected,
     inNoteMode,
     isPaused,
     restartCallback,
@@ -32,8 +32,8 @@
     $selectedNumber = null;
     $selectedSubCellId = null;
     $inNoteMode = false;
-    $initialSelect = null;
-    $ctrlNumSelected = null;
+    $firstSelected = null;
+    $selectedControlNumber = null;
     $errorsList = [];
   }
   

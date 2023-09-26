@@ -1,9 +1,9 @@
 <script lang="ts">
   import { capitalizeFirstLetter } from "../../lib/Utils";
   import {
-    ctrlNumSelected,
+    selectedControlNumber,
     errorsList,
-    initialSelect,
+    firstSelected,
     inNoteMode,
     isPaused,
     showMenu,
@@ -24,8 +24,8 @@
     $selectedNumber = null;
     $selectedSubCellId = null;
     $inNoteMode = false;
-    $initialSelect = null;
-    $ctrlNumSelected = null;
+    $firstSelected = null;
+    $selectedControlNumber = null;
     $errorsList = [];
     $showMenu = true;
   }
