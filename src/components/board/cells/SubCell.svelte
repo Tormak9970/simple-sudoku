@@ -25,28 +25,25 @@
   export let cellId: number;
   export let subId: number;
 
-  let boardUnsub: Unsubscriber;
   let notesUnsub: Unsubscriber;
 
   const firmId = `${cellId}|${subId}`;
 
-  let editable = true; // set true if board is '.' here
-  let value = "";
+  $: cellData = $board ? $solver.getCell(firmId) : null;
+  $: editable = cellData ? cellData.editable : true; // set true if board is '.' here
+  $: value = cellData ? cellData.value : true;
   let notesList = [];
 
-  function getValue() {
-    if ($solver.currentBoard) {
-      const data = $solver.getCell(firmId);
-      value = data.value;
-      editable = data.editable;
-    }
-  }
+  $: selected = $selectedSubCellId === firmId && editable && $firstSelected === "cell";
+
+  $: sameAsSelectedNumber = $selectedSubCellId !== firmId && ($selectedNumber === value || $selectedControlNumber === value || notesList.includes($selectedNumber?.toString()) || notesList.includes($selectedControlNumber?.toString()));
+  $: sameAsSelected = sameAsSelectedNumber || ($selectedSubCellId === firmId && !editable)
 
   async function click() {
     if (!$firstSelected) $firstSelected = "cell";
 
     if ($firstSelected === "cell") {
-      if ($selectedSubCellId == firmId) {
+      if ($selectedSubCellId === firmId) {
         $selectedSubCellId = null;
         $selectedNumber = null;
       } else {
@@ -56,12 +53,14 @@
     }
 
     if ($selectedControlNumber && editable) {
-      if ($errorsList.includes(firmId))
+      if ($errorsList.includes(firmId)) {
         $errorsList.splice($errorsList.indexOf(firmId), 1);
+      }
       $errorsList = [...$errorsList];
 
       if ($inNoteMode) {
         await $solver.setNote(firmId, $selectedControlNumber.toString());
+
         if (notesList.includes($selectedControlNumber)) {
           $selectedNumber = $selectedControlNumber;
         } else {
@@ -102,16 +101,12 @@
   });
 
   onMount(() => {
-    boardUnsub = board.subscribe(() => {
-      getValue();
-    });
     notesUnsub = notes.subscribe((newNotes) => {
       notesList = editable ? newNotes[firmId] : [];
     });
   });
 
   onDestroy(() => {
-    if (boardUnsub) boardUnsub();
     if (notesUnsub) notesUnsub();
   });
 </script>
@@ -120,15 +115,8 @@
 <div
   class="sub-cell"
   class:clue={!editable}
-  class:ghost-selected={
-    (
-      ($selectedNumber === value || $selectedControlNumber === value || notesList.includes($selectedNumber?.toString())) &&
-      (!$selectedControlNumber || $selectedControlNumber === value)
-    ) ||
-    notesList.includes($selectedControlNumber?.toString()) ||
-    ($selectedSubCellId === firmId && !editable)
-  }
-  class:selected={$selectedSubCellId === firmId && editable && $firstSelected === "cell"}
+  class:same-as-selected={sameAsSelected}
+  class:selected={selected}
   class:error={$errorsList.includes(firmId)}
   on:click={click}
 >
@@ -193,8 +181,8 @@
     background-color: var(--foreground);
   }
 
-  .ghost-selected,
-  .clue.ghost-selected:hover {
+  .same-as-selected,
+  .clue.same-as-selected:hover {
     background-color: var(--highlight-accent);
   }
 

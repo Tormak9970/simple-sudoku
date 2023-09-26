@@ -19,6 +19,10 @@
 
   export let control: number;
 
+  function notesContainControl(): boolean {
+    return $solver.getNote($selectedSubCellId).includes(control.toString());
+  }
+
   async function click() {
     if (!$firstSelected) $firstSelected = "ctrl";
 
@@ -27,7 +31,9 @@
     }
 
     if ($selectedSubCellId) {
-      if ($errorsList.includes($selectedSubCellId)) $errorsList.splice($errorsList.indexOf($selectedSubCellId), 1);
+      if ($errorsList.includes($selectedSubCellId)) {
+        $errorsList.splice($errorsList.indexOf($selectedSubCellId), 1);
+      }
       $errorsList = [...$errorsList];
 
       const cellVal = $solver.getCell($selectedSubCellId);
@@ -35,11 +41,7 @@
         if ($inNoteMode) {
           await $solver.setNote($selectedSubCellId, control.toString());
 
-          if ($solver.getNote($selectedSubCellId).includes(control.toString())) {
-            $selectedNumber = control;
-          } else {
-            $selectedNumber = null;
-          }
+          $selectedNumber = notesContainControl() ? control : null;
         } else {
           if (cellVal.value !== control.toString()) {
             await $solver.setCell($selectedSubCellId, control.toString());
