@@ -3,28 +3,28 @@
     "name": "Simple Sudoku",
     "icons": [
         {
-            "src": "/sudoku-logo_maskable_x192.png",
+            "src": "/icons/maskable_192x192.png",
             "type": "image/png",
             "sizes": "192x192",
             "purpose": "maskable"
         },
         {
-            "src": "/sudoku-logo_maskable_x192.png",
+            "src": "/icons/maskable_192x192.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "/sudoku-log_x512.png",
+            "src": "/icons/maskable_512x512.png",
             "type": "image/png",
             "sizes": "512x512"
         }
     ],
     "start_url": "/",
     "id": "/",
-    "background_color": "#252525",
+    "background_color": "#010101",
     "display": "standalone",
     "scope": "/",
-    "theme_color": "#82b74b",
+    "theme_color": "#ff3d03",
     "description": "Minimalist Sudoku",
     "orientation": "portrait"
 }
