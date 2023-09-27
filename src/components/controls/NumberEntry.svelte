@@ -64,7 +64,7 @@
   const scale = tweened(1.0, { duration: 200, easing: bounceIn });
 
   $: numLeft = 9 - ($board.split(`${control}`).length - 1);
-  $: selected = $selectedControlNumber === control && $firstSelected === "ctrl";
+  $: selected = $selectedControlNumber === control.toString() && $firstSelected === "ctrl";
 
   onMount(() => {
     // controlNumSelectedUnsub = ctrlNumSelected.subscribe((selectedControl) => {

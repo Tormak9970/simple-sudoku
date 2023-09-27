@@ -151,8 +151,8 @@
 
   }
   .sub-cell {
-    width: min(calc((100% - 4px - 12px) / 3), 80px);
-    height: min(calc(100% - 4px), 80px);
+    width: min(100%, 80px);
+    height: min(100%, 80px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -197,6 +197,9 @@
   .same-as-selected,
   .clue.same-as-selected:hover {
     background-color: var(--highlight-accent);
+  }
+  .same-as-selected:hover {
+    background-color: var(--highlight-accent-hover);
   }
 
   .selected { background-color: var(--highlight); }
