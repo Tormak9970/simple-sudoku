@@ -113,34 +113,46 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div
-  class="sub-cell"
-  class:clue={!editable}
-  class:same-as-selected={sameAsSelected}
-  class:selected={selected}
-  class:error={$errorsList.includes(firmId)}
-  on:click={click}
->
-  {#if value === ""}
-    <div class="notes-cont">
-      {#each notesList as note}
-        <div class="note">
-          <div>{note}</div>
-        </div>
-      {/each}
-    </div>
-  {:else}
-    <div class="val-cont">
-      <div class="val">{value}</div>
-    </div>
-  {/if}
+<div class="sub-cell-container">
+  <div
+    class="sub-cell"
+    class:clue={!editable}
+    class:same-as-selected={sameAsSelected}
+    class:selected={selected}
+    class:error={$errorsList.includes(firmId)}
+    on:click={click}
+  >
+    {#if value === ""}
+      <div class="notes-cont">
+        {#each notesList as note}
+          <div class="note">
+            <div>{note}</div>
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <div class="val-cont">
+        <div class="val">{value}</div>
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style>
-  .sub-cell {
+  .sub-cell-container {
     width: calc((100% - 4px - 12px) / 3);
     height: calc(100% - 4px);
+
     margin: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+  }
+  .sub-cell {
+    width: min(calc((100% - 4px - 12px) / 3), 80px);
+    height: min(calc(100% - 4px), 80px);
     display: flex;
     flex-direction: column;
     justify-content: center;

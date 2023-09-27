@@ -17,7 +17,7 @@
   } from "../../stores";
   import ThemeToggle from "./ThemeToggle.svelte";
   
-  async function back(e: Event) {
+  async function back() {
     await $solver.save();
     $timer = "00:00:00";
     $isPaused = false;
@@ -64,7 +64,7 @@
 
 <style>
   .header {
-    margin-top: calc((100vw - min(60vh, 90vw)) / 2 - 10px);
+    margin-top: min(calc((100vw - min(60vh, 90vw)) / 2 - 10px), 40px);
     width: min(60vh, 90vw);
     height: 34px;
 
