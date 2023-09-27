@@ -21,7 +21,7 @@
     notes,
   } from "../../../stores";
   import type { Unsubscriber } from "svelte/store";
-  import { LogController } from "../../../lib/LogController";
+  import BouncyCircle from "../../utils/BouncyCircle.svelte";
 
   export let cellId: number;
   export let subId: number;
@@ -114,28 +114,29 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="sub-cell-container">
-  <div
-    class="sub-cell"
-    class:clue={!editable}
-    class:same-as-selected={sameAsSelected}
-    class:selected={selected}
-    class:error={$errorsList.includes(firmId)}
-    on:click={click}
-  >
-    {#if value === ""}
-      <div class="notes-cont">
-        {#each notesList as note}
-          <div class="note">
-            <div>{note}</div>
-          </div>
-        {/each}
-      </div>
-    {:else}
-      <div class="val-cont">
-        <div class="val">{value}</div>
-      </div>
-    {/if}
-  </div>
+  <BouncyCircle onClick={click}>
+    <div
+      class="sub-cell"
+      class:clue={!editable}
+      class:same-as-selected={sameAsSelected}
+      class:selected={selected}
+      class:error={$errorsList.includes(firmId)}
+    >
+      {#if value === ""}
+        <div class="notes-cont">
+          {#each notesList as note}
+            <div class="note">
+              <div>{note}</div>
+            </div>
+          {/each}
+        </div>
+      {:else}
+        <div class="val-cont">
+          <div class="val">{value}</div>
+        </div>
+      {/if}
+    </div>
+  </BouncyCircle>
 </div>
 
 <style>
@@ -151,8 +152,8 @@
 
   }
   .sub-cell {
-    width: min(100%, 80px);
-    height: min(100%, 80px);
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

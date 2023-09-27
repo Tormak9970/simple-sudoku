@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
   import {
     board,
     selectedControlNumber,
@@ -10,13 +9,7 @@
     selectedSubCellId,
     solver,
   } from "../../stores";
-  import { bounceIn } from "svelte/easing"
-  import { tweened } from 'svelte/motion';
-  import type { Unsubscriber } from "svelte/store";
-  import { LogController } from "../../lib/LogController";
-
-  let controlNumSelectedUnsub: Unsubscriber;
-  let initialSelectUnsub: Unsubscriber;
+    import BouncyCircle from "../utils/BouncyCircle.svelte";
 
   export let control: number;
 
@@ -61,47 +54,36 @@
     }
   }
 
-  const scale = tweened(1.0, { duration: 200, easing: bounceIn });
-
   $: numLeft = 9 - ($board.split(`${control}`).length - 1);
   $: selected = $selectedControlNumber === control.toString() && $firstSelected === "ctrl";
-
-  onMount(() => {
-    // controlNumSelectedUnsub = ctrlNumSelected.subscribe((selectedControl) => {
-    //   if (selectedControl === control && $initialSelect === "ctrl") {
-    //     scale.set(1.05);
-    //   } else {
-    //     scale.set(1.0);
-    //   }
-    // });
-
-    // initialSelectUnsub = initialSelect.subscribe((initial) => {
-    //   if ($ctrlNumSelected === control && initial === "ctrl") {
-    //     scale.set(1.05);
-    //   } else {
-    //     scale.set(1.0);
-    //   }
-    // });
-  });
-
-  onDestroy(() => {
-    if (controlNumSelectedUnsub) controlNumSelectedUnsub();
-    if (initialSelectUnsub) initialSelectUnsub();
-  });
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div
-  class="number"
-  class:selected={selected}
-  style="transform: scale({$scale})"
-  on:click={click}
->
-  <div class="inner">{control}</div>
-  <div class="num-left">{numLeft > 0 ? numLeft : ""}</div>
+<div class="number-container">
+  <BouncyCircle min={90} onClick={click}>
+    <div
+      class="number"
+      class:selected={selected}
+    >
+      <div class="inner">{control}</div>
+      <div class="num-left">{numLeft > 0 ? numLeft : ""}</div>
+    </div>
+  </BouncyCircle>
 </div>
 
 <style>
+  .number-container {
+    width: 49px;
+    height: 49px;
+    
+    margin: 0px 5px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .number {
     display: flex;
     flex-direction: column;
@@ -114,8 +96,6 @@
     width: 35px;
     height: 35px;
     padding: 7px;
-
-    margin: 0px 5px;
 
     position: relative;
 
