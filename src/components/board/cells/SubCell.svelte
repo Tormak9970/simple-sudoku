@@ -98,7 +98,7 @@
   }
 
   afterUpdate(() => {
-    // LogController.log("Updated cell", firmId);
+    LogController.log(`${firmId}'s value was ${value}. SelectedNumber: ${$selectedNumber}. Equals: ${$selectedNumber === value}`);
     if ($board === $solver.solvedBoard) userWon();
   });
 
@@ -117,7 +117,7 @@
 <div
   class="sub-cell"
   class:clue={!editable}
-  class:same-as-selected={sameAsSelected}
+  class:same-as-selected={$selectedNumber === value}
   class:selected={selected}
   class:error={$errorsList.includes(firmId)}
   on:click={click}

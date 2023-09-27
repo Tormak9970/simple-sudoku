@@ -40,6 +40,7 @@
   function clearClick() {
     if ($selectedSubCellId && $solver.getCell($selectedSubCellId).editable) {
       $solver.setCell($selectedSubCellId, ".");
+      $selectedNumber = null;
     }
   }
 
