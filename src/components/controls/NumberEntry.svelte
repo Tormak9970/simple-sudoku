@@ -28,7 +28,7 @@
     if (!$firstSelected) $firstSelected = "ctrl";
 
     if ($firstSelected === "ctrl") {
-      $selectedControlNumber = $selectedControlNumber === control ? null : control;
+      $selectedControlNumber = $selectedControlNumber === control.toString() ? null : control.toString();
     }
 
     if ($selectedSubCellId) {
@@ -42,14 +42,12 @@
         if ($inNoteMode) {
           await $solver.setNote($selectedSubCellId, control.toString());
 
-          $selectedNumber = notesContainControl() ? control : null;
+          $selectedNumber = notesContainControl() ? control.toString() : null;
         } else {
           if (cellVal.value !== control.toString()) {
-            LogController.log("Settings cell", $selectedSubCellId, "to", control.toString());
             await $solver.setCell($selectedSubCellId, control.toString());
-            $selectedNumber = control;
+            $selectedNumber = control.toString();
           } else if ($firstSelected === "cell") {
-            LogController.log("Clearing cell", $selectedSubCellId);
             await $solver.setCell($selectedSubCellId, ".");
             $selectedNumber = null;
           }

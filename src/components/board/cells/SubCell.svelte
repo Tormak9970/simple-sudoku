@@ -32,7 +32,7 @@
 
   $: cellData = $board ? $solver.getCell(firmId) : null;
   $: editable = cellData ? cellData.editable : true; // set true if board is '.' here
-  $: value = cellData ? cellData.value : true;
+  $: value = cellData ? cellData.value : "";
   let notesList = [];
 
   $: selected = $selectedSubCellId === firmId && editable && $firstSelected === "cell";
@@ -98,7 +98,6 @@
   }
 
   afterUpdate(() => {
-    LogController.log(`${firmId}'s value was ${value}. SelectedNumber: ${$selectedNumber}. Equals: ${$selectedNumber === value}`);
     if ($board === $solver.solvedBoard) userWon();
   });
 
@@ -117,7 +116,7 @@
 <div
   class="sub-cell"
   class:clue={!editable}
-  class:same-as-selected={$selectedNumber === value}
+  class:same-as-selected={sameAsSelected}
   class:selected={selected}
   class:error={$errorsList.includes(firmId)}
   on:click={click}
