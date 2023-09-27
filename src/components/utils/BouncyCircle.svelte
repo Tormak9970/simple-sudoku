@@ -5,14 +5,20 @@
   export let damping = 0.1;
   export let min = 95;
   export let max = 100;
+  export let shouldAnimate = true;
   export let onClick: () => void;
 
+  //? This is used because stores don't update instantly, so setting size would allow size and selection to get out of sync.
+  let backupSize = min;
   let size = spring(min, { stiffness: stiffness, damping: damping });
 
   function click() {
     onClick();
 
-    size.set($size === min ? max : min);
+    if (shouldAnimate) {
+      backupSize = backupSize === min ? max : min;
+      size.set(backupSize);
+    }
   }
 </script>
 

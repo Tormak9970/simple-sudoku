@@ -114,7 +114,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="sub-cell-container">
-  <BouncyCircle onClick={click}>
+  <BouncyCircle onClick={click} shouldAnimate={!(!editable && $selectedControlNumber)}>
     <div
       class="sub-cell"
       class:clue={!editable}

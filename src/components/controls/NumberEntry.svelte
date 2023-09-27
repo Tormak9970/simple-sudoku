@@ -93,9 +93,8 @@
     border-radius: 50px;
     background-color: var(--foreground);
 
-    width: 35px;
-    height: 35px;
-    padding: 7px;
+    width: 100%;
+    height: 100%;
 
     position: relative;
 
