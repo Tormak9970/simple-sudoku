@@ -2,7 +2,7 @@
   import { set } from "idb-keyval";
   import { theme } from "../../stores";
 
-  export let value = false;
+  export let value = true;
 
   /**
    * Handles when the slider is clicked.
@@ -15,7 +15,7 @@
 
     value = state === "true" ? false : true;
     
-    $theme = value ? "light" : "dark";
+    $theme = value ? "dark" : "light";
     set("theme", $theme);
     document.documentElement.setAttribute("data-theme", $theme);
   }
@@ -49,15 +49,13 @@
     width: 0.9em;
     height: 0.9em;
 
-    /* background: var(--foreground); */
-
     top: 0.15em;
     right: 1.1em;
 
     transition: transform 0.3s;
     
     content: "";
-    background-image: url("/images/dark-mode.svg");
+    background-image: url("/images/light-mode.svg");
     background-size: 0.9em 0.9em;
   }
 
@@ -74,7 +72,7 @@
     transition: transform 0.3s;
     
     content: "";
-    background-image: url("/images/light-mode.svg");
+    background-image: url("/images/dark-mode.svg");
     background-size: 0.9em 0.9em;
   }
 

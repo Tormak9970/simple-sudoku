@@ -13,6 +13,7 @@
     solver,
     timer,
     selectedDifficulty,
+    theme,
   } from "../../stores";
   import ThemeToggle from "./ThemeToggle.svelte";
   
@@ -57,7 +58,7 @@
   {/if}
 
   <div class="theme-cont">
-    <ThemeToggle />
+    <ThemeToggle value={$theme === "dark"} />
   </div>
 </div>
 

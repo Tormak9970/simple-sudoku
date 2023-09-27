@@ -16,10 +16,12 @@
 
 [data-theme="light"] {
   --font-color: #141414;
+  
   --background: #fcebe8;
-  --background-hover: #e9d3cf;
-  --foreground: #e4d4cc;
-  --foreground-hover: #ceb8ad;
+  --background-hover: #f0e1de;
+
+  --foreground: #e0d1c9;
+  --foreground-hover: #d1c4bd;
 
   --highlight: #ff3d03;
   --highlight-hover: #ff1403;
@@ -29,13 +31,15 @@
 
 [data-theme="dark"] {
   --font-color: #e7e7e7;
+
   --background: #010101;
   --background-hover: #090909;
+
   --foreground: #1a1a1a;
   --foreground-hover: #222222;
 
   --highlight: #ff3d03;
-  --highlight-hover: #ff1403;
+  --highlight-hover: #ff5c2b;
   --highlight-accent: #441b15;
   --highlight-accent-hover: #582118;
 }

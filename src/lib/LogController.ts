@@ -30,7 +30,7 @@ export class LogController {
   static log: ConsoleWrapper = console.log.bind(
     window.console,
     `%c Simple Sudoku %c INFO %c`,
-    "background: #beadfa; color: black;",
+    "background: #ff3d03; color: black;",
     "background: #1abc9c; color: black;",
     "background: transparent;"
   );
@@ -42,7 +42,7 @@ export class LogController {
   static warn: ConsoleWrapper = console.warn.bind(
     window.console,
     `%c Simple Sudoku %c WARNING %c`,
-    "background: #beadfa; color: black;",
+    "background: #ff3d03; color: black;",
     "background: #e3c907; color: black;",
     "background: transparent;",
   );
@@ -54,7 +54,7 @@ export class LogController {
   static error: ConsoleWrapper = console.error.bind(
     window.console,
     `%c Simple Sudoku %c ERROR %c`,
-    "background: #beadfa; color: black;",
+    "background: #ff3d03; color: black;",
     "background: #c70808; color: black;",
     "background: transparent;"
   );

@@ -13,6 +13,7 @@
   import { bounceIn } from "svelte/easing"
   import { tweened } from 'svelte/motion';
   import type { Unsubscriber } from "svelte/store";
+  import { LogController } from "../../lib/LogController";
 
   let controlNumSelectedUnsub: Unsubscriber;
   let initialSelectUnsub: Unsubscriber;
@@ -44,9 +45,11 @@
           $selectedNumber = notesContainControl() ? control : null;
         } else {
           if (cellVal.value !== control.toString()) {
+            LogController.log("Settings cell", $selectedSubCellId, "to", control.toString());
             await $solver.setCell($selectedSubCellId, control.toString());
             $selectedNumber = control;
           } else if ($firstSelected === "cell") {
+            LogController.log("Clearing cell", $selectedSubCellId);
             await $solver.setCell($selectedSubCellId, ".");
             $selectedNumber = null;
           }

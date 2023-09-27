@@ -21,6 +21,7 @@
     notes,
   } from "../../../stores";
   import type { Unsubscriber } from "svelte/store";
+  import { LogController } from "../../../lib/LogController";
 
   export let cellId: number;
   export let subId: number;
@@ -97,6 +98,7 @@
   }
 
   afterUpdate(() => {
+    // LogController.log("Updated cell", firmId);
     if ($board === $solver.solvedBoard) userWon();
   });
 
