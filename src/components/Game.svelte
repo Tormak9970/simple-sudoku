@@ -5,7 +5,6 @@
 
   import Board from "./board/Board.svelte";
   import Controls from "./controls/Controls.svelte";
-  import VictoryModal from "./modals/VictoryModal.svelte";
 
   export let newGame: boolean = false;
 
@@ -27,7 +26,6 @@
     <Board />
     <Controls />
   {/await}
-  <VictoryModal />
 </div>
 
 <style>

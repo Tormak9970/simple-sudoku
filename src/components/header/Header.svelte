@@ -9,7 +9,7 @@
     showMenu,
     selectedNumber,
     selectedSubCellId,
-    showRestart,
+    showRestartModal,
     solver,
     timer,
     selectedDifficulty,
@@ -21,7 +21,7 @@
     await $solver.save();
     $timer = "00:00:00";
     $isPaused = false;
-    $showRestart = false;
+    $showRestartModal = false;
     $selectedNumber = null;
     $selectedSubCellId = null;
     $inNoteMode = false;
@@ -65,7 +65,7 @@
 <style>
   .header {
     margin-top: min(calc((100vw - min(60vh, 90vw)) / 2 - 10px), 40px);
-    width: min(60vh, 90vw);
+    width: min(60vh, 90vw, 465px);
     height: 34px;
 
     display: flex;

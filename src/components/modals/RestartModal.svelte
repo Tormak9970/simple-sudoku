@@ -1,94 +1,81 @@
 <script lang="ts">
-  import { showRestart, restartCallback, isPaused } from "../../stores";
+  import ModalBody from "./ModalBody.svelte";
+  import { showRestartModal, restartCallback, isPaused } from "../../stores";
+  import Button from "../utils/Button.svelte";
 
-  function close() {
-    $showRestart = false;
+  /**
+   * Function to run on confirmation.
+   */
+  function onConfirm(): void {
+    $restartCallback()
+  }
+
+  /**
+   * Function to run on cancel.
+   */
+  function onCancel(): void {
+    $showRestartModal = false;
     $isPaused = false;
   }
 </script>
 
-{#if $showRestart}
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="backdrop" on:click={close}>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="modal" on:click|stopPropagation={() => {}}>
-      <div class="content">
-        <div style="font-size: 20px;">Are you sure you want to restart?</div>
-        <div style="font-size: 16px;">All progress will be lost.</div>
-
-        <div class="btns-cont">
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div class="btn" on:click={$restartCallback}>Yes</div>
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div class="btn" on:click={close}>No</div>
-        </div>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<ModalBody title="Careful!" canClose="{false}">
+  <div class="content">
+    <div class="info">
+      <div class="type-cont">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="3em"
+          viewBox="0 0 512 512"
+          fill="#ffee04">
+          <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+          <path
+            d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"
+          ></path>
+        </svg>
       </div>
+      <div class="message">If you restart, all progress will be lost.</div>
+    </div>
+    <div class="buttons">
+      <Button
+        label="Continue"
+        onClick="{onConfirm}"
+        width="47.5%" />
+      <Button
+        label="Cancel"
+        onClick="{onCancel}"
+        width="47.5%" />
     </div>
   </div>
-{/if}
+</ModalBody>
 
 <style>
-  .backdrop {
-    z-index: 10;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal {
-    padding: 14px;
-    max-width: 70vw;
-    border-radius: 8px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: var(--background);
-    border: 1px solid var(--highlight);
-
-    overflow: hidden;
-
-    box-shadow: -2px 2px 8px 1px #000;
-  }
-
   .content {
-    max-height: 50vh;
-    overflow: auto;
+    max-width: 400px;
+  }
+
+  .info {
+    margin: 0px 10px;
+    margin-top: 7px;
+    font-size: 14px;
 
     display: flex;
-    flex-direction: column;
     align-items: center;
   }
 
-  .btns-cont {
-    margin-top: 20px;
-    width: 100%;
+  .message {
+    margin-left: 15px;
+  }
+
+  .buttons {
+    margin-top: 14px;
+    margin-bottom: 7px;
+    margin-left: 7px;
+    margin-right: 7px;
+    width: calc(100% - 14px);
     display: flex;
     justify-content: space-around;
-  }
-
-  .btn {
-    padding: 6px 20px;
-    border-radius: 8px;
-    border: 1px solid var(--highlight);
-
-    background-color: var(--foreground);
-  }
-  .btn:hover {
-    background-color: var(--hover);
-    cursor: pointer;
-  }
-  .btn:focus {
-    background-color: var(--highlight);
+    justify-self: flex-end;
   }
 </style>

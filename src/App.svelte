@@ -1,8 +1,10 @@
 <script>
   import Game from "./components/Game.svelte";
   import Header from "./components/header/Header.svelte";
+  import RestartModal from "./components/modals/RestartModal.svelte";
+  import VictoryModal from "./components/modals/VictoryModal.svelte";
   // import StartScreen from "./components/StartScreen.svelte";
-  import { newGame, showMenu, selectedDifficulty } from "./stores";
+  import { newGame, showMenu, showRestartModal, showVictoryModal } from "./stores";
 
 
   //? From package.json
@@ -17,6 +19,12 @@
     <Game newGame={$newGame} />
   {:else}
     <Game newGame={$newGame} />
+  {/if}
+  {#if $showRestartModal}
+    <RestartModal />
+  {/if}
+  {#if $showVictoryModal}
+    <VictoryModal />
   {/if}
 </main>
 

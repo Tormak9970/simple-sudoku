@@ -55,8 +55,8 @@
 
 <style>
   .board {
-    width: min(60vh, 90vw);
-    height: min(60vh, 90vw);
+    width: min(60vh, 90vw, 420px);
+    height: min(60vh, 90vw, 420px);
 
     display: flex;
     flex-direction: column;

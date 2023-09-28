@@ -12,7 +12,7 @@
     inNoteMode,
     firstSelected,
     errorsList,
-    showVictory,
+    showVictoryModal,
     isPaused,
     bestTime,
     timer,
@@ -94,7 +94,7 @@
       }
     }
 
-    $showVictory = true;
+    $showVictoryModal = true;
   }
 
   afterUpdate(() => {

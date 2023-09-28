@@ -21,10 +21,10 @@ export const selectedSubCellId = writable(null);
 export const inNoteMode = writable(false);
 export const selectedControlNumber = writable(null);
 
-export const showRestart = writable(false);
+export const showRestartModal = writable(false);
 export const restartCallback = writable(() => {});
 
-export const showVictory = writable(false);
+export const showVictoryModal = writable(true);
 export const bestTime = writable(null);
 export const currentTimeIsBest = writable(false);
 

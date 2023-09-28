@@ -9,7 +9,7 @@
     selectedSubCellId,
     solver,
   } from "../../stores";
-    import BouncyCircle from "../utils/BouncyCircle.svelte";
+  import BouncyCircle from "../utils/BouncyCircle.svelte";
 
   export let control: number;
 
@@ -73,8 +73,8 @@
 
 <style>
   .number-container {
-    width: 49px;
-    height: 49px;
+    width: 55px;
+    height: 55px;
     
     margin: 0px 5px;
     
