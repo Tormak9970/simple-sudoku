@@ -24,7 +24,7 @@ export const selectedControlNumber = writable(null);
 export const showRestartModal = writable(false);
 export const restartCallback = writable(() => {});
 
-export const showVictoryModal = writable(true);
+export const showVictoryModal = writable(false);
 export const bestTime = writable(null);
 export const currentTimeIsBest = writable(false);
 
