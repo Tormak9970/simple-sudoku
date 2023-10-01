@@ -100,6 +100,7 @@
     border-radius: 4px;
     border: 1px solid var(--shadow);
     position: relative;
+    width: min(60vh, 90vw, 465px);
   }
 
   .header {

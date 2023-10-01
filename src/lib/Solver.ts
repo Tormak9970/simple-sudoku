@@ -1,6 +1,6 @@
-import { get, set } from 'idb-keyval';
+import { del, get, set } from 'idb-keyval';
 import { arrayDiff, chunk, idToIdx, idxToId } from './Utils';
-import { board, moves, notes } from "../stores";
+import { board, loadErrorCallback, moves, notes, showLoadErrorModal } from "../stores";
 import { LogController } from "./LogController";
 
 /**
@@ -413,7 +413,6 @@ export class Solver {
       let result = true;
 
       for (const peer of PEERS[square]) {
-        // TODO: this aint workin
         result = result && this.#eliminate(values, peer, values[square]);
       }
 
@@ -487,6 +486,7 @@ export class Solver {
     for (let square of SQUARES) {
       values[square] = DIGITS;
     }
+    
     for (let squareIndex in SQUARES) {
       if (DIGITS.indexOf(board2.charAt(parseInt(squareIndex))) >= 0 && !this.#assign(values, SQUARES[squareIndex], board2.charAt(parseInt(squareIndex)))) return false;
     }
@@ -503,34 +503,54 @@ export class Solver {
   async getBoard(difficulty: string, newGame: boolean) {
     this.currentDifficulty = difficulty;
 
-    if (!newGame && await get(`initialBoard-${difficulty}`)) {
-      this.initialBoard = await get(`initialBoard-${difficulty}`);
-      this.currentBoard = await get(`currentBoard-${difficulty}`);
-      this.solvedBoard = await get(`solvedBoard-${difficulty}`);
-      this.moves = JSON.parse(await get(`moves-${difficulty}`));
-      this.notes = JSON.parse(await get(`notes-${difficulty}`));
+    return new Promise(async (resolve) => {
+      try {
+        if (!newGame && await get(`initialBoard-${difficulty}`)) {
+          this.initialBoard = await get(`initialBoard-${difficulty}`);
+          this.currentBoard = await get(`currentBoard-${difficulty}`);
+          this.solvedBoard = await get(`solvedBoard-${difficulty}`);
+          this.moves = JSON.parse(await get(`moves-${difficulty}`));
+          this.notes = JSON.parse(await get(`notes-${difficulty}`));
+    
+          resolve(this.initialBoard);
+        } else {
+          throw new Error("Triggering cache block");
+        }
+      } catch (e: any) {
+        loadErrorCallback.set(async () => {
+          await del(`initialBoard-${difficulty}`);
+          await del(`currentBoard-${difficulty}`);
+          await del(`solvedBoard-${difficulty}`);
 
-      return this.initialBoard;
-    }
+          await del(`moves-${difficulty}`);
+          await del(`notes-${difficulty}`);
 
-    const difficultyData = difficulties[difficulty];
-    const numberOfHints = Math.round(Math.random() * (difficultyData.max - difficultyData.min)) + difficultyData.min;
+          await del(`timer-${difficulty}`);
 
-    this.initialBoard = this.#transform(this.#randomPuzzle(numberOfHints));
-    this.currentBoard = this.initialBoard;
-    this.solvedBoard = Object.values(this.solve(this.initialBoard)).join('');
-    this.moves = [];
-
-    this.notes = {};
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        this.notes[`${i}|${j}`] = [];
+          const difficultyData = difficulties[difficulty];
+          const numberOfHints = Math.round(Math.random() * (difficultyData.max - difficultyData.min)) + difficultyData.min;
+      
+          this.initialBoard = this.#transform(this.#randomPuzzle(numberOfHints));
+          this.currentBoard = this.initialBoard;
+          this.solvedBoard = Object.values(this.solve(this.initialBoard)).join('');
+          this.moves = [];
+      
+          this.notes = {};
+          for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+              this.notes[`${i}|${j}`] = [];
+            }
+          }
+      
+          await this.save();
+      
+          showLoadErrorModal.set(false);
+          resolve(this.initialBoard);
+        });
+        
+        showLoadErrorModal.set(true);
       }
-    }
-
-    await this.save();
-
-    return this.initialBoard;
+    });
   }
 
   #notesCheckRow([rowIdx, columnIdx]: number[], newVal: string) {

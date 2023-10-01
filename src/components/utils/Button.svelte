@@ -2,6 +2,7 @@
   export let label: string;
   export let width = "40px";
   export let height = "auto";
+  export let fontSize = "12px";
   export let onClick: (e: MouseEvent) => void;
   export let disabled = false;
   export let highlight = false;
@@ -17,7 +18,7 @@
   style="width: {width}; height: {height};"
   on:click="{onClick}"
 >
-  <div style="user-select: none;">{label}</div>
+  <div style="user-select: none; font-size: {fontSize};">{label}</div>
 </button>
 
 <style>
@@ -33,7 +34,6 @@
     align-items: center;
     justify-content: center;
 
-    font-size: 12px;
     cursor: pointer;
 
     color: var(--font-color);

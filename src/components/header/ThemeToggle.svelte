@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { set } from "idb-keyval";
   import { theme } from "../../stores";
 
   export let value = true;
@@ -10,13 +9,11 @@
    */
   function handleClick(event: MouseEvent): void {
     const target = event.target as HTMLInputElement;
-
     const state = target.getAttribute("aria-checked");
 
     value = state === "true" ? false : true;
     
     $theme = value ? "dark" : "light";
-    set("theme", $theme);
     document.documentElement.setAttribute("data-theme", $theme);
   }
 </script>

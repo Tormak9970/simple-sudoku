@@ -32,7 +32,7 @@
   .game-container {
     margin-top: min(calc((100vw - min(60vh, 90vw)) / 2 - 10px), 40px);
 
-    width: min(60vh, 90vw);
+    width: min(60vh, 90vw, 465px);
 
     display: flex;
     flex-direction: column;

@@ -21,20 +21,23 @@
   import Button from "../utils/Button.svelte";
 
   async function close() {
-    const diff = $solver.currentDifficulty;
-    await del(`iBoard-${diff}`);
-    await del(`cBoard-${diff}`);
-    await del(`sBoard-${diff}`);
+    const difficulty = $solver.currentDifficulty;
+    
+    await del(`initialBoard-${difficulty}`);
+    await del(`currentBoard-${difficulty}`);
+    await del(`solvedBoard-${difficulty}`);
 
-    await del(`moves-${diff}`);
-    await del(`notes-${diff}`);
+    await del(`moves-${difficulty}`);
+    await del(`notes-${difficulty}`);
 
-    await del(`timer-${diff}`);
+    await del(`timer-${difficulty}`);
 
     if ($bestTime) {
-      if ($currentTimeIsBest) await set(`bestTime-${diff}`, $timer);
+      if ($currentTimeIsBest) {
+        await set(`bestTime-${difficulty}`, $timer);
+      }
     } else {
-      await set(`bestTime-${diff}`, $timer);
+      await set(`bestTime-${difficulty}`, $timer);
     }
 
     // reset end game values

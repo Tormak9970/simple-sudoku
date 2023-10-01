@@ -28,6 +28,9 @@ export const showVictoryModal = writable(false);
 export const bestTime = writable(null);
 export const currentTimeIsBest = writable(false);
 
+export const showLoadErrorModal = writable(false);
+export const loadErrorCallback = writable(() => {});
+
 export const errorsList = writable([]);
 
 // Universal stores
