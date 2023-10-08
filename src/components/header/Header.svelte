@@ -85,6 +85,7 @@
   }
 
   .logo-cont {
+    width: 80px;
     display: flex;
     align-items: center;
 
