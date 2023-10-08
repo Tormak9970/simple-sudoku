@@ -500,57 +500,66 @@ export class Solver {
    * @param newGame Whether this is a new game or not.
    * @returns The board.
    */
-  async getBoard(difficulty: string, newGame: boolean) {
+  getBoard(difficulty: string, newGame: boolean): Promise<string> {
     this.currentDifficulty = difficulty;
 
-    return new Promise(async (resolve) => {
-      try {
-        if (!newGame && await get(`initialBoard-${difficulty}`)) {
-          this.initialBoard = await get(`initialBoard-${difficulty}`);
-          this.currentBoard = await get(`currentBoard-${difficulty}`);
-          this.solvedBoard = await get(`solvedBoard-${difficulty}`);
-          this.moves = JSON.parse(await get(`moves-${difficulty}`));
-          this.notes = JSON.parse(await get(`notes-${difficulty}`));
-    
-          resolve(this.initialBoard);
-        } else {
-          throw new Error("Triggering cache block");
+    const createNewGame = async () => {
+      await del(`initialBoard-${difficulty}`);
+      await del(`currentBoard-${difficulty}`);
+      await del(`solvedBoard-${difficulty}`);
+
+      await del(`moves-${difficulty}`);
+      await del(`notes-${difficulty}`);
+
+      await del(`timer-${difficulty}`);
+
+      const difficultyData = difficulties[difficulty];
+      const numberOfHints = Math.round(Math.random() * (difficultyData.max - difficultyData.min)) + difficultyData.min;
+  
+      this.initialBoard = this.#transform(this.#randomPuzzle(numberOfHints));
+      this.currentBoard = this.initialBoard;
+      this.solvedBoard = Object.values(this.solve(this.initialBoard)).join('');
+      this.moves = [];
+  
+      this.notes = {};
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          this.notes[`${i}|${j}`] = [];
         }
-      } catch (e: any) {
-        loadErrorCallback.set(async () => {
-          await del(`initialBoard-${difficulty}`);
-          await del(`currentBoard-${difficulty}`);
-          await del(`solvedBoard-${difficulty}`);
-
-          await del(`moves-${difficulty}`);
-          await del(`notes-${difficulty}`);
-
-          await del(`timer-${difficulty}`);
-
-          const difficultyData = difficulties[difficulty];
-          const numberOfHints = Math.round(Math.random() * (difficultyData.max - difficultyData.min)) + difficultyData.min;
-      
-          this.initialBoard = this.#transform(this.#randomPuzzle(numberOfHints));
-          this.currentBoard = this.initialBoard;
-          this.solvedBoard = Object.values(this.solve(this.initialBoard)).join('');
-          this.moves = [];
-      
-          this.notes = {};
-          for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-              this.notes[`${i}|${j}`] = [];
-            }
-          }
-      
-          await this.save();
-      
-          showLoadErrorModal.set(false);
-          resolve(this.initialBoard);
-        });
-        
-        showLoadErrorModal.set(true);
       }
-    });
+  
+      await this.save();
+  
+      showLoadErrorModal.set(false);
+      return this.initialBoard;
+    }
+
+    if (newGame) {
+      return createNewGame();
+    } else {
+      return new Promise(async (resolve) => {
+        try {
+          if (await get(`initialBoard-${difficulty}`)) {
+            this.initialBoard = await get(`initialBoard-${difficulty}`);
+            this.currentBoard = await get(`currentBoard-${difficulty}`);
+            this.solvedBoard = await get(`solvedBoard-${difficulty}`);
+            this.moves = JSON.parse(await get(`moves-${difficulty}`));
+            this.notes = JSON.parse(await get(`notes-${difficulty}`));
+      
+            resolve(this.initialBoard);
+          } else {
+            throw new Error("Triggering cache block!");
+          }
+        } catch (e: any) {
+          loadErrorCallback.set(async () => {
+            const initialBoard = await createNewGame();
+            resolve(initialBoard);
+          });
+          
+          showLoadErrorModal.set(true);
+        }
+      });
+    }
   }
 
   #notesCheckRow([rowIdx, columnIdx]: number[], newVal: string) {

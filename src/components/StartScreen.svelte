@@ -74,6 +74,7 @@
     <!-- TODO: show loading thing here -->
   {:then _}
     <div class="preview-container">
+      <!-- TODO: if there is an existing game, show a preview of it -->
       <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           fill-rule="evenodd"

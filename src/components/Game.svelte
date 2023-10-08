@@ -1,19 +1,19 @@
 <script lang="ts">
   import { get, set } from "idb-keyval";
 
-  import { selectedDifficulty, solver, timer } from "../stores";
+  import { newGame, selectedDifficulty, solver, timer } from "../stores";
 
   import Board from "./board/Board.svelte";
   import Controls from "./controls/Controls.svelte";
-
-  export let newGame: boolean = false;
+  import { LogController } from "../lib/LogController";
 
   async function load() {
     // get saved board or create new
-    await $solver.getBoard($selectedDifficulty, newGame);
+    LogController.log("Selected difficulty:", $selectedDifficulty);
+    await $solver.getBoard($selectedDifficulty, $newGame);
 
     // get saved time or start new timer
-    if (!newGame && (await get(`timer-${$selectedDifficulty}`))) {
+    if (!$newGame && (await get(`timer-${$selectedDifficulty}`))) {
       $timer = await get(`timer-${$selectedDifficulty}`);
     } else {
       await set(`timer-${$selectedDifficulty}`, $timer);

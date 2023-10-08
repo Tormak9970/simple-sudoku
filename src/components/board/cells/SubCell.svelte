@@ -103,7 +103,7 @@
 
   onMount(() => {
     notesUnsub = notes.subscribe((newNotes) => {
-      notesList = editable ? newNotes[firmId] : [];
+      notesList = editable ? newNotes[firmId] ?? [] : [];
     });
   });
 

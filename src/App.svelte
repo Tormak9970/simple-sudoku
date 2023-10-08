@@ -37,7 +37,7 @@
   {#if $showMenu}
     <StartScreen />
   {:else}
-    <Game newGame={$newGame} />
+    <Game />
   {/if}
   {#if $showRestartModal}
     <RestartModal />
