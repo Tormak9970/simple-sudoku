@@ -1,15 +1,4 @@
 :root {
-  --font-color: #e7e7e7;
-  --background: #010101;
-  --background-hover: #090909;
-  --foreground: #1a1a1a;
-  --foreground-hover: #222222;
-
-  --highlight: #ff3d03;
-  --highlight-hover: #ff5c2b;
-  --highlight-accent: #441b15;
-  --highlight-accent-hover: #582118;
-
   --warning: #e24a4a;
   --warning-hover: #e13525;
 }
@@ -25,8 +14,10 @@
 
   --highlight: #ff3d03;
   --highlight-hover: #ff1403;
-  --highlight-accent: #b1230d;
-  --highlight-accent-hover: #9c1b07;
+
+  --highlight-accent: #c92a11;
+  --highlight-accent-hover: #b1230d;
+  --highlight-accent-clue-hover: #c95411;
 }
 
 [data-theme="dark"] {
@@ -40,6 +31,8 @@
 
   --highlight: #ff3d03;
   --highlight-hover: #ff5c2b;
+
   --highlight-accent: #441b15;
   --highlight-accent-hover: #582118;
+  --highlight-accent-clue-hover: #571900;
 }

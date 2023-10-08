@@ -120,6 +120,7 @@
       class:clue={!editable}
       class:same-as-selected={sameAsSelected}
       class:selected={selected}
+      class:clue-selected={$selectedSubCellId === firmId && !editable}
       class:error={$errorsList.includes(firmId)}
     >
       {#if value === ""}
@@ -195,12 +196,16 @@
     background-color: var(--foreground);
   }
 
-  .same-as-selected,
-  .clue.same-as-selected:hover {
+  .same-as-selected {
     background-color: var(--highlight-accent);
   }
   .same-as-selected:hover {
     background-color: var(--highlight-accent-hover);
+  }
+  .clue.same-as-selected:hover,
+  .clue-selected,
+  .clue-selected:hover {
+    background-color: var(--highlight-accent-clue-hover);
   }
 
   .selected { background-color: var(--highlight); }
