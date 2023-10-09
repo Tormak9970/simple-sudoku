@@ -41,6 +41,11 @@
     if ($selectedSubCellId && $solver.getCell($selectedSubCellId).editable) {
       $solver.setCell($selectedSubCellId, ".");
       $selectedNumber = null;
+
+      if ($errorsList.includes($selectedSubCellId)) {
+        $errorsList.splice($errorsList.indexOf($selectedSubCellId), 1);
+      }
+      $errorsList = [...$errorsList];
     }
   }
 
@@ -49,6 +54,10 @@
   }
 
   function validate() {
+    $selectedControlNumber = null;
+    $selectedNumber = null;
+    $selectedSubCellId = null;
+
     const errs = $solver.validate();
 
     if (errs.length > 0) {
