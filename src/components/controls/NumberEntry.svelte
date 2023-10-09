@@ -60,7 +60,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="number-container">
-  <BouncyCircle min={90} onClick={click}>
+  <BouncyCircle min={90} onClick={click} shouldAnimate={!($selectedNumber || $firstSelected === "cell")}>
     <div
       class="number"
       class:selected={selected}

@@ -35,7 +35,7 @@
 
 <div class="header">
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="logo-cont" on:click={back}>
+  <div class="logo-cont" class:not-menu={!$showMenu} on:click={back}>
     <svg viewBox="0 0 512 512" width="16px" height="16px" xmlns="http://www.w3.org/2000/svg">
       <path
         fill-rule="evenodd"
@@ -88,15 +88,14 @@
     width: 80px;
     display: flex;
     align-items: center;
-
-    cursor: pointer;
   }
 
   .logo-cont svg {
     fill: var(--highlight);
   }
 
-  .logo-cont:hover svg {
+  .logo-cont.not-menu:hover svg {
+    cursor: pointer;
     fill: var(--highlight-hover);
   }
 
