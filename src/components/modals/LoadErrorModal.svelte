@@ -4,8 +4,7 @@
   import Button from "../utils/Button.svelte";
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<ModalBody title="Load Error!" canClose="{false}">
+<ModalBody title="Load Error!">
   <div class="content">
     <div class="info">
       <div class="type-cont">
@@ -33,7 +32,7 @@
 
 <style>
   .content {
-    max-width: 400px;
+    width: 100%;
   }
 
   .info {

@@ -19,8 +19,7 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<ModalBody title="Careful!" canClose="{false}">
+<ModalBody title="Careful!">
   <div class="content">
     <div class="info">
       <div class="type-cont">
@@ -52,7 +51,7 @@
 
 <style>
   .content {
-    max-width: 400px;
+    width: 100%
   }
 
   .info {

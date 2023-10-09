@@ -60,7 +60,7 @@
   }
 </script>
 
-<ModalBody title="Board Complete!" canClose="{false}">
+<ModalBody title="Board Complete!">
   <div class="content">
     <div class="info">
       <div style="font-size: 16px; margin-bottom: 7px;">
@@ -89,8 +89,7 @@
 
 <style>
   .content {
-    max-width: 400px;
-    min-width: 300px;
+    width: 100%;
   }
 
   .info {
